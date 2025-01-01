@@ -13,6 +13,12 @@ typedef struct
     GLuint id;
 } Shader;
 
+typedef enum
+{
+    SHADER_TYPE_SPRITE,
+    SHADER_TYPE_MAX,
+} ShaderType;
+
 Shader *newShader(const char *vertPath, const char *fragPath);
 GLuint createShader(const char *source, GLuint type);
 void compileShader(GLuint shaderID);

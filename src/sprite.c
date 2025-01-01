@@ -10,3 +10,8 @@ SpriteRenderer *newSpriteRenderer(Shader *shader, Animation *animation)
 
     return renderer;
 }
+
+void freeSpriteRenderer(SpriteRenderer *renderer)
+{
+    //FREE(renderer);
+}

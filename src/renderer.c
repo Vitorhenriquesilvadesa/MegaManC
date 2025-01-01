@@ -80,6 +80,7 @@ void render(Renderer2D *renderer, Scene *scene)
     for (uint32_t i = 0; i < scene->entityCount; i++)
     {
         renderEntity(scene->entities[i], renderer->camera);
+        renderWireframe(scene->entities[i], renderer->camera);
     }
 }
 
@@ -89,14 +90,38 @@ void renderEntity(Entity *entity, Camera2D *camera)
 
     glActiveTexture(GL_TEXTURE0);
     bindTexture(entity->renderer->currentAnimation->texture);
-    bindShader(entity->renderer->shader);
+    bindShader(shader);
+
     shaderSetInt(shader, "frameCount", entity->renderer->currentAnimation->frameCount);
     shaderSetInt(shader, "currentFrame", entity->renderer->currentAnimation->currentFrame);
     shaderSetMat4(shader, "projection", cameraGetProjectionMatrix(camera));
     shaderSetMat4(shader, "view", cameraGetViewMatrix(camera));
     shaderSetMat4(shader, "model", entityGetTransformationMatrix(entity));
-
     shaderSetInt(shader, "albedo", 0);
+
     bindMesh(quad);
     drawMesh(quad);
+
+    unbindTextures();
+    unbindMeshes();
+    unbindShaders();
+}
+
+void renderWireframe(Entity *entity, Camera2D *camera)
+{
+    static Shader *wireframe = NULL;
+
+    if (!wireframe)
+    {
+        wireframe = newShader("../assets/shaders/wireframe.vert", "../assets/shaders/wireframe.frag");
+    }
+
+    bindShader(wireframe);
+
+    shaderSetMat4(wireframe, "projection", cameraGetProjectionMatrix(camera));
+    shaderSetMat4(wireframe, "view", cameraGetViewMatrix(camera));
+    shaderSetMat4(wireframe, "model", entityGetTransformationMatrix(entity));
+
+    bindMesh(quad);
+    drawMeshWireframe(quad);
 }

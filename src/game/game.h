@@ -6,6 +6,8 @@
 #include <flags.h>
 #include <renderer.h>
 
+#define FROM_SERVICE(serviceType, type) (type *)getGameInstanceService(serviceType)
+
 typedef struct
 {
     ServiceSet services;
@@ -15,6 +17,7 @@ typedef struct
     Scene *activeScene;
 } Game;
 
+Service *getGameInstanceService(ServiceType type);
 void gameLoop(Game *game);
 void calculateGameDeltaTime(Game *game);
 void initGame(Game *game);
@@ -29,5 +32,7 @@ void setGameInstance(Game *game);
 void setGameInstanceFlag(GameFlag flag, FlagFunction function);
 bool getGameInstanceFlag(GameFlag flag, ServiceType type);
 Scene *getGameInstanceActiveScene();
+
+bool isKeyPressed(uint32_t key);
 
 #endif

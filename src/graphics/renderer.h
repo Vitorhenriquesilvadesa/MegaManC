@@ -39,5 +39,6 @@ Renderer2D *newRenderer();
 
 void render(Renderer2D *renderer, Scene *scene);
 void renderEntity(Entity *entity, Camera2D *camera);
+void renderWireframe(Entity *entity, Camera2D *camera);
 
 #endif

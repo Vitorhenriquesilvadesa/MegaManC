@@ -12,5 +12,6 @@ typedef struct
 } Scene;
 
 Scene *newScene();
+void addObjectToScene(Scene *scene, Entity *entity);
 
 #endif

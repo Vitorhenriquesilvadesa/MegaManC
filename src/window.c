@@ -1,5 +1,6 @@
 #include <window.h>
 #include <glad/glad.h>
+#include <sizes.h>
 
 void initWindow(Window *window, vec2s size, const char *title, vec4s clearColor)
 {
@@ -10,5 +11,19 @@ void initWindow(Window *window, vec2s size, const char *title, vec4s clearColor)
 
 void onWindowResize(GLFWwindow *window, int width, int height)
 {
-    glViewport(0, 0, width, height);
+    float aspectRatio = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
+
+    int newWidth = width;
+    int newHeight = height;
+
+    if (width / (float)height > aspectRatio)
+    {
+        newWidth = (int)(height * aspectRatio);
+    }
+    else
+    {
+        newHeight = (int)(width / aspectRatio);
+    }
+
+    glViewport((width - newWidth) / 2, (height - newHeight) / 2, newWidth, newHeight);
 }

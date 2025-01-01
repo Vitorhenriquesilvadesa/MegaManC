@@ -52,119 +52,140 @@ build cmake_object_order_depends_target_MegaMan: phony || .
 build CMakeFiles/MegaMan.dir/src/animation.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/animation.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\animation.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
 build CMakeFiles/MegaMan.dir/src/entity.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/entity.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\entity.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
 build CMakeFiles/MegaMan.dir/src/files.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/files.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\files.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
 build CMakeFiles/MegaMan.dir/src/game.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/game.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\game.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
 build CMakeFiles/MegaMan.dir/src/glad.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/glad.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\glad.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
 build CMakeFiles/MegaMan.dir/src/graphics_api.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/graphics_api.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\graphics_api.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
 build CMakeFiles/MegaMan.dir/src/main.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/main.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\main.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
+  OBJECT_DIR = CMakeFiles\MegaMan.dir
+  OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
+
+build CMakeFiles/MegaMan.dir/src/megaman.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/megaman.c || cmake_object_order_depends_target_MegaMan
+  DEP_FILE = CMakeFiles\MegaMan.dir\src\megaman.c.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
 build CMakeFiles/MegaMan.dir/src/memory.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/memory.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\memory.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
 build CMakeFiles/MegaMan.dir/src/mesh.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/mesh.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\mesh.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
+  OBJECT_DIR = CMakeFiles\MegaMan.dir
+  OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
+
+build CMakeFiles/MegaMan.dir/src/object_pool_api.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/object_pool_api.c || cmake_object_order_depends_target_MegaMan
+  DEP_FILE = CMakeFiles\MegaMan.dir\src\object_pool_api.c.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
 build CMakeFiles/MegaMan.dir/src/renderer.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/renderer.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\renderer.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
 build CMakeFiles/MegaMan.dir/src/scene.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/scene.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\scene.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
 build CMakeFiles/MegaMan.dir/src/service.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/service.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\service.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
 build CMakeFiles/MegaMan.dir/src/shader.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/shader.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\shader.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
 build CMakeFiles/MegaMan.dir/src/sprite.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/sprite.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\sprite.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
 build CMakeFiles/MegaMan.dir/src/stb_image.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/stb_image.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\stb_image.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
+  OBJECT_DIR = CMakeFiles\MegaMan.dir
+  OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
+
+build CMakeFiles/MegaMan.dir/src/test_scene.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/test_scene.c || cmake_object_order_depends_target_MegaMan
+  DEP_FILE = CMakeFiles\MegaMan.dir\src\test_scene.c.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
 build CMakeFiles/MegaMan.dir/src/texture.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/texture.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\texture.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
 build CMakeFiles/MegaMan.dir/src/window.c.obj: C_COMPILER__MegaMan_unscanned_Debug C$:/Github/CDev/MegaMan/src/window.c || cmake_object_order_depends_target_MegaMan
   DEP_FILE = CMakeFiles\MegaMan.dir\src\window.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool
+  INCLUDES = -IC:/Libraries/glfw/include -IC:/Libraries/glad/include -IC:/Libraries/cglm/include -IC:/Libraries/stb_image -IC:/Github/CDev/MegaMan/src/service -IC:/Github/CDev/MegaMan/src/graphics -IC:/Github/CDev/MegaMan/src/entity -IC:/Github/CDev/MegaMan/src/memory -IC:/Github/CDev/MegaMan/src/game -IC:/Github/CDev/MegaMan/src/util -IC:/Github/CDev/MegaMan/src/pool -IC:/Github/CDev/MegaMan/src/scenes
   OBJECT_DIR = CMakeFiles\MegaMan.dir
   OBJECT_FILE_DIR = CMakeFiles\MegaMan.dir\src
 
@@ -176,7 +197,7 @@ build CMakeFiles/MegaMan.dir/src/window.c.obj: C_COMPILER__MegaMan_unscanned_Deb
 #############################################
 # Link the executable MegaMan.exe
 
-build MegaMan.exe: C_EXECUTABLE_LINKER__MegaMan_Debug CMakeFiles/MegaMan.dir/src/animation.c.obj CMakeFiles/MegaMan.dir/src/entity.c.obj CMakeFiles/MegaMan.dir/src/files.c.obj CMakeFiles/MegaMan.dir/src/game.c.obj CMakeFiles/MegaMan.dir/src/glad.c.obj CMakeFiles/MegaMan.dir/src/graphics_api.c.obj CMakeFiles/MegaMan.dir/src/main.c.obj CMakeFiles/MegaMan.dir/src/memory.c.obj CMakeFiles/MegaMan.dir/src/mesh.c.obj CMakeFiles/MegaMan.dir/src/renderer.c.obj CMakeFiles/MegaMan.dir/src/scene.c.obj CMakeFiles/MegaMan.dir/src/service.c.obj CMakeFiles/MegaMan.dir/src/shader.c.obj CMakeFiles/MegaMan.dir/src/sprite.c.obj CMakeFiles/MegaMan.dir/src/stb_image.c.obj CMakeFiles/MegaMan.dir/src/texture.c.obj CMakeFiles/MegaMan.dir/src/window.c.obj
+build MegaMan.exe: C_EXECUTABLE_LINKER__MegaMan_Debug CMakeFiles/MegaMan.dir/src/animation.c.obj CMakeFiles/MegaMan.dir/src/entity.c.obj CMakeFiles/MegaMan.dir/src/files.c.obj CMakeFiles/MegaMan.dir/src/game.c.obj CMakeFiles/MegaMan.dir/src/glad.c.obj CMakeFiles/MegaMan.dir/src/graphics_api.c.obj CMakeFiles/MegaMan.dir/src/main.c.obj CMakeFiles/MegaMan.dir/src/megaman.c.obj CMakeFiles/MegaMan.dir/src/memory.c.obj CMakeFiles/MegaMan.dir/src/mesh.c.obj CMakeFiles/MegaMan.dir/src/object_pool_api.c.obj CMakeFiles/MegaMan.dir/src/renderer.c.obj CMakeFiles/MegaMan.dir/src/scene.c.obj CMakeFiles/MegaMan.dir/src/service.c.obj CMakeFiles/MegaMan.dir/src/shader.c.obj CMakeFiles/MegaMan.dir/src/sprite.c.obj CMakeFiles/MegaMan.dir/src/stb_image.c.obj CMakeFiles/MegaMan.dir/src/test_scene.c.obj CMakeFiles/MegaMan.dir/src/texture.c.obj CMakeFiles/MegaMan.dir/src/window.c.obj
   FLAGS = -g
   LINK_LIBRARIES = -lglfw3  -lopengl32  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   LINK_PATH = -LC:/Libraries/glfw/lib-mingw-w64

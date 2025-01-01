@@ -15,6 +15,7 @@ typedef struct
     FlagFunction isWindowClosed;
     Window *window;
     Renderer2D *renderer;
+    Shader *shaders[SHADER_TYPE_MAX];
 } GraphicsAPI;
 
 bool isWindowClosed(void *self);
@@ -23,5 +24,6 @@ void initGraphicsAPI(void *self);
 void updateGraphicsAPI(void *self, float dt);
 void shutdownGraphicsAPI(void *self);
 void setupCallbacks(GraphicsAPI *api);
+Shader *getShader(GraphicsAPI *graphics, ShaderType type);
 
 #endif

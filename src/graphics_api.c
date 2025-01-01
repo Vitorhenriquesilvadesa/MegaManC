@@ -35,6 +35,9 @@ void initGraphicsAPI(void *self)
     glfwInit();
 
     Window *window = api->window;
+
+    glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+
     api->window->nativeWindow = glfwCreateWindow(window->size.x, window->size.y, window->title, NULL, NULL);
     glfwMakeContextCurrent(api->window->nativeWindow);
 
@@ -43,8 +46,18 @@ void initGraphicsAPI(void *self)
 
     setupCallbacks(api);
 
+    int width, height;
+
+    glfwGetWindowSize(api->window->nativeWindow, &width, &height);
+    onWindowResize(api->window->nativeWindow, width, height);
+
     Renderer2D *renderer = newRenderer();
     api->renderer = renderer;
+
+    Shader *spriteShader = newShader("../assets/shaders/default.vert",
+                                     "../assets/shaders/default.frag");
+
+    api->shaders[SHADER_TYPE_SPRITE] = spriteShader;
 }
 
 void updateGraphicsAPI(void *self, float dt)
@@ -65,9 +78,17 @@ void shutdownGraphicsAPI(void *self)
 
     glfwDestroyWindow(api->window->nativeWindow);
     glfwTerminate();
+
+    FREE(api->renderer);
+    FREE(api->window);
 }
 
 void setupCallbacks(GraphicsAPI *api)
 {
     glfwSetFramebufferSizeCallback(api->window->nativeWindow, onWindowResize);
+}
+
+Shader *getShader(GraphicsAPI *graphics, ShaderType type)
+{
+    return graphics->shaders[type];
 }

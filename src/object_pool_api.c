@@ -25,6 +25,12 @@ void updateObjectPoolAPI(void *self, float dt)
 
 void shutdownObjectPoolAPI(void *self)
 {
+    CAST_API(ObjectPoolAPI, self);
+
+    for (uint32_t i = 0; i < api->scene->entityCount; i++)
+    {
+        freeEntity(api->scene->entities[i]);
+    }
 }
 
 void updateScene(Scene *scene, float dt)

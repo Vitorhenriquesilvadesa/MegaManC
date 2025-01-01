@@ -23,6 +23,7 @@ include_directories(
     src/game 
     src/util
     src/pool
+    src/scenes
 )
 
 link_directories(${GLFW_DIR}/lib-mingw-w64)

@@ -55,5 +55,12 @@ void unbindMeshes()
 
 void drawMesh(Mesh *mesh)
 {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDrawElements(GL_TRIANGLES, mesh->count, GL_UNSIGNED_INT, NULL);
+}
+
+void drawMeshWireframe(Mesh *mesh)
+{
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDrawElements(GL_TRIANGLES, mesh->count, GL_UNSIGNED_INT, NULL);
 }

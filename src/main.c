@@ -6,8 +6,8 @@ const int HEIGHT = 600;
 int main(void)
 {
     Game game;
-    initGame(&game);
     setGameInstance(&game);
+    initGame(&game);
     gameLoop(&game);
     freeGame(&game);
 

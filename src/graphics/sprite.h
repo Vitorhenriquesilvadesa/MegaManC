@@ -12,5 +12,6 @@ typedef struct
 } SpriteRenderer;
 
 SpriteRenderer *newSpriteRenderer(Shader *shader, Animation *animation);
+void freeSpriteRenderer(SpriteRenderer *renderer);
 
 #endif

@@ -5,12 +5,23 @@
 #include <object_pool_api.h>
 #include <stdio.h>
 #include <animation.h>
+#include <test_scene.h>
+
 #include <GLFW/glfw3.h>
 
 static Game *instance = NULL;
 
+Service *getGameInstanceService(ServiceType type)
+{
+    return instance->services.services[type];
+}
+
 void gameLoop(Game *game)
 {
+    Scene *scene = getTestScene();
+    CAST_API(ObjectPoolAPI, game->services.services[SERVICE_TYPE_OBJECT_POOL]);
+    api->scene = scene;
+
     while (!getGameInstanceFlag(FLAG_WINDOW_CLOSED, SERVICE_TYPE_GRAPHICS))
     {
         updateGame(game);
@@ -36,17 +47,6 @@ void initGame(Game *game)
     initServices(game);
 
     Scene *scene = newScene();
-    Shader *shader = newShader("C:/Github/CDev/MegaMan/assets/shaders/default.vert",
-                               "C:/Github/CDev/MegaMan/assets/shaders/default.frag");
-
-    Texture *texture = newTextureFromImage("../assets/sprites/megaman/walk.png");
-
-    Animation *animation = newAnimation(4, 5, texture);
-
-    SpriteRenderer *spriteRenderer = newSpriteRenderer(shader, animation);
-
-    Entity *entity = newEntity((vec2s){0.0f, 0.0f}, (vec2s){32.0f, 32.0f}, spriteRenderer);
-    scene->entities[scene->entityCount++] = entity;
 
     CAST_API(ObjectPoolAPI, game->services.services[SERVICE_TYPE_OBJECT_POOL]);
     api->scene = scene;
@@ -65,6 +65,12 @@ void updateGame(Game *game)
 
 void freeGame(Game *game)
 {
+    for (size_t i = 0; i < SERVICE_TYPE_MAX; i++)
+    {
+        Service *service = game->services.services[i];
+        service->shutdown(service);
+    }
+
     FREE(game->services.services);
 }
 
@@ -82,7 +88,7 @@ void registerServices(Game *game)
 void registerGraphicsAPI(Game *game)
 {
     vec4s backgroundColor = {0.0f, 0.0f, 0.0f, 1.0f};
-    vec2s windowSize = {1280, 720};
+    vec2s windowSize = {256 * 4, 224 * 4};
     GraphicsAPI *graphics = newGraphicsAPI(windowSize, "Mega Man", backgroundColor);
     registerService(game, AS_SERVICE_PTR(graphics));
     game->flags[FLAG_WINDOW_CLOSED] = graphics->isWindowClosed;
@@ -123,4 +129,11 @@ Scene *getGameInstanceActiveScene()
     CAST_API(ObjectPoolAPI, instance->services.services[SERVICE_TYPE_OBJECT_POOL]);
 
     return api->scene;
+}
+
+bool isKeyPressed(uint32_t key)
+{
+    GraphicsAPI *graphics = (GraphicsAPI *)getGameInstanceService(SERVICE_TYPE_GRAPHICS);
+    GLFWwindow *window = graphics->window->nativeWindow;
+    return glfwGetKey(window, key) == GLFW_PRESS;
 }
