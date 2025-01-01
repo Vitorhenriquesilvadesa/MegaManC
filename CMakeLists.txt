@@ -4,10 +4,10 @@ project(MegaMan)
 
 set(SOURCE_DIR src)
 
-set(GLAD_DIR "C:/Libraries/glad")
-set(GLFW_DIR "C:/Libraries/glfw")
-set(CGLM_DIR "C:/Libraries/cglm")
-set(STB_IMAGE_DIR "C:/Libraries/stb_image")
+set(GLAD_DIR "lib/glad")
+set(GLFW_DIR "lib/glfw")
+set(CGLM_DIR "lib/cglm")
+set(STB_IMAGE_DIR "lib/stb_image")
 
 file(GLOB SOURCE_FILES "${SOURCE_DIR}/*.c" "${SOURCE_DIR}/*.h")
 
