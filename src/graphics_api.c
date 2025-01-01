@@ -39,7 +39,9 @@ void initGraphicsAPI(void *self)
     glfwMakeContextCurrent(api->window->nativeWindow);
 
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(window->clearColor.r, window->clearColor.g, window->clearColor.b, window->clearColor.a);
+
+    setupCallbacks(api);
 
     Renderer2D *renderer = newRenderer();
     api->renderer = renderer;
@@ -51,9 +53,7 @@ void updateGraphicsAPI(void *self)
 
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(api->renderer->shader->id);
-    glBindVertexArray(api->renderer->mesh->id);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    render(api->renderer);
 
     glfwSwapBuffers(api->window->nativeWindow);
     glfwPollEvents();

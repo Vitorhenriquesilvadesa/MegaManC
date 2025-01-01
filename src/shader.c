@@ -104,3 +104,25 @@ void linkProgram(Shader *shader, GLuint vertexShader, GLuint fragmentShader)
         FREE(shader);
     }
 }
+
+void shaderSetInt(Shader *shader, const char *name, int value)
+{
+    GLuint location = glGetUniformLocation(shader->id, name);
+    glUniform1i(location, value);
+}
+
+void shaderSetMat4(Shader *shader, const char *name, mat4s value)
+{
+    GLuint location = glGetUniformLocation(shader->id, name);
+    glUniformMatrix4fv(location, 1, false, (const GLfloat *)value.raw);
+}
+
+void bindShader(Shader *shader)
+{
+    glUseProgram(shader->id);
+}
+
+void unbindShaders()
+{
+    glUseProgram(0);
+}

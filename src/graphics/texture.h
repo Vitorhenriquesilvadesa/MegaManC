@@ -5,7 +5,7 @@
 
 typedef struct
 {
-    GLuint textureID;
+    GLuint id;
     int width;
     int height;
 } Texture;

@@ -19,5 +19,6 @@ typedef struct
 Mesh *newMesh(vec2s *vertices, vec2s *texCoords, GLuint *indices, uint32_t count);
 void bindMesh(Mesh *mesh);
 void unbindMeshes();
+void drawMesh(Mesh *mesh);
 
 #endif
