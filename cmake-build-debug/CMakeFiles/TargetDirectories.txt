@@ -1,0 +1,3 @@
+C:/Github/CDev/MegaMan/cmake-build-debug/CMakeFiles/MegaMan.dir
+C:/Github/CDev/MegaMan/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Github/CDev/MegaMan/cmake-build-debug/CMakeFiles/rebuild_cache.dir

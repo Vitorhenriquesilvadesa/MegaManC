@@ -47,13 +47,13 @@ void initGraphicsAPI(void *self)
     api->renderer = renderer;
 }
 
-void updateGraphicsAPI(void *self)
+void updateGraphicsAPI(void *self, float dt)
 {
     CAST_API(GraphicsAPI, self);
 
     glClear(GL_COLOR_BUFFER_BIT);
 
-    render(api->renderer);
+    render(api->renderer, getGameInstanceActiveScene());
 
     glfwSwapBuffers(api->window->nativeWindow);
     glfwPollEvents();

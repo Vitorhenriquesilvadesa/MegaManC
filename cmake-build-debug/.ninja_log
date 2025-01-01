@@ -1,0 +1,17 @@
+# ninja log v6
+12	483	7574638260866255	CMakeFiles/MegaMan.dir/src/files.c.obj	33eb6af69489b1e9
+47	598	7574643717241713	CMakeFiles/MegaMan.dir/src/sprite.c.obj	3ad31b56e9d4cc7c
+1429	1755	7574638275034049	CMakeFiles/MegaMan.dir/src/texture.c.obj	e48e59c2ac315920
+485	613	7574638265599950	CMakeFiles/MegaMan.dir/src/memory.c.obj	e138449a6945a26c
+20	600	7574643716974862	CMakeFiles/MegaMan.dir/src/game.c.obj	ebf15a003e431b9
+27	613	7574643717045428	CMakeFiles/MegaMan.dir/src/graphics_api.c.obj	f8a215960fe0ba81
+34	611	7574643717105935	CMakeFiles/MegaMan.dir/src/main.c.obj	b70a3d40b2d700b2
+1129	1428	7574638272042944	CMakeFiles/MegaMan.dir/src/service.c.obj	b929de4a52334264
+11	624	7574643716883879	CMakeFiles/MegaMan.dir/src/entity.c.obj	f53dcc2f1fcbb940
+613	1362	7574638266876515	CMakeFiles/MegaMan.dir/src/mesh.c.obj	9de4fcf2c7119397
+40	646	7574643717181276	CMakeFiles/MegaMan.dir/src/renderer.c.obj	fcf5ef6b6a20edef
+25	4039	7574638260996958	CMakeFiles/MegaMan.dir/src/glad.c.obj	28108f440900f3b6
+1191	1946	7574638272646497	CMakeFiles/MegaMan.dir/src/shader.c.obj	6c089ceac6ad66e9
+1362	2360	7574638274370847	CMakeFiles/MegaMan.dir/src/stb_image.c.obj	25ca94bae4706d43
+1755	2508	7574638278297698	CMakeFiles/MegaMan.dir/src/window.c.obj	54ca070248755132
+646	882	7574643723233488	MegaMan.exe	8e41a9d264baff70

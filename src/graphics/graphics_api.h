@@ -20,7 +20,7 @@ typedef struct
 bool isWindowClosed(void *self);
 GraphicsAPI *newGraphicsAPI(vec2s size, const char *title, vec4s clearColor);
 void initGraphicsAPI(void *self);
-void updateGraphicsAPI(void *self);
+void updateGraphicsAPI(void *self, float dt);
 void shutdownGraphicsAPI(void *self);
 void setupCallbacks(GraphicsAPI *api);
 

@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 typedef void (*initFn)(void *self);
-typedef void (*updateFn)(void *self);
+typedef void (*updateFn)(void *self, float dt);
 typedef void (*shutdownFn)(void *self);
 #define AS_SERVICE_PTR(value) (Service *)value
 #define CAST_API(type, value) type *api = (type *)value
@@ -12,6 +12,7 @@ typedef void (*shutdownFn)(void *self);
 typedef enum
 {
     SERVICE_TYPE_GRAPHICS,
+    SERVICE_TYPE_OBJECT_POOL,
     SERVICE_TYPE_MAX,
 } ServiceType;
 

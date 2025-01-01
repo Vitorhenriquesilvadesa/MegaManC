@@ -18,9 +18,11 @@ include_directories(
     ${STB_IMAGE_DIR}
     src/service 
     src/graphics 
+    src/entity
     src/memory 
     src/game 
     src/util
+    src/pool
 )
 
 link_directories(${GLFW_DIR}/lib-mingw-w64)
