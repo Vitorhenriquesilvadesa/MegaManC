@@ -18,6 +18,7 @@ void updateGame(Game *game);
 void freeGame(Game *game);
 void registerService(Game *game, Service *service);
 void registerServices(Game *game);
+void registerGraphicsAPI(Game *game);
 void initServices(Game *game);
 void setGameInstance(Game *game);
 void setGameInstanceFlag(GameFlag flag, FlagFunction function);

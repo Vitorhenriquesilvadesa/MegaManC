@@ -47,7 +47,14 @@ void registerService(Game *game, Service *service)
 
 void registerServices(Game *game)
 {
-    GraphicsAPI *graphics = newGraphicsAPI(1280, 720, "Mega Man");
+    registerGraphicsAPI(game);
+}
+
+void registerGraphicsAPI(Game *game)
+{
+    vec4s backgroundColor = {0.0f, 0.0f, 0.0f, 1.0f};
+    vec2s windowSize = {1280, 720};
+    GraphicsAPI *graphics = newGraphicsAPI(windowSize, "Mega Man", backgroundColor);
     registerService(game, AS_SERVICE_PTR(graphics));
     game->flags[FLAG_WINDOW_CLOSED] = graphics->isWindowClosed;
 }
