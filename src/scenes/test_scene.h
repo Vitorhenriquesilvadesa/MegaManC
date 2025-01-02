@@ -5,6 +5,7 @@
 
 Scene *getTestScene();
 Entity *newBrick(vec2s position);
-void updateBrick(void *self, float dt);
+void onUpdateBrick(void *self, float dt);
+void onCollisionBrick(void *self, AABBColisionData data);
 
 #endif

@@ -1,5 +1,7 @@
 #include <object_pool_api.h>
 #include <allocator.h>
+#include <graphics_api.h>
+#include <game.h>
 
 ObjectPoolAPI *newObjectPoolAPI()
 {
@@ -35,19 +37,36 @@ void shutdownObjectPoolAPI(void *self)
 
 void updateScene(Scene *scene, float dt)
 {
+    Entity **entities = scene->entities;
+    GraphicsAPI *graphics = (GraphicsAPI *)getGameInstanceService(SERVICE_TYPE_GRAPHICS);
+    Camera2D *camera = graphics->renderer->camera;
+
     for (uint32_t i = 0; i < scene->entityCount; i++)
     {
-        updateEntity(scene->entities[i], dt);
+        if (isEntityOnScreen(entities[i], camera))
+        {
+            updateEntity(entities[i], dt);
+        }
+
         for (uint32_t j = 0; j < scene->entityCount; j++)
         {
-            if (i == j || (scene->entities[i]->type == ENTITY_TYPE_BRICK && scene->entities[j]->type == ENTITY_TYPE_BRICK))
+            if (!isEntityOnScreen(entities[i], camera) || !isEntityOnScreen(entities[j], camera))
             {
                 continue;
             }
 
-            if (AABBIntersect(scene->entities[i], scene->entities[j]))
+            if (i == j ||
+                (entities[i]->type == ENTITY_TYPE_BRICK && entities[j]->type == ENTITY_TYPE_BRICK) ||
+                (entities[i]->type == ENTITY_TYPE_BRICK))
             {
-                printf("Coliding: %u, %u\n", i, j);
+                continue;
+            }
+
+            if (AABBIntersect(entities[i], entities[j]))
+            {
+                AABBColisionData data = calculateCollisionData(entities[i], entities[j]);
+                entities[i]->onCollision(entities[i], data);
+                // resolveCollision(entities[i], entities[j], &data);
             }
         }
     }

@@ -77,10 +77,19 @@ Renderer2D *newRenderer()
 
 void render(Renderer2D *renderer, Scene *scene)
 {
+    Entity **entities = scene->entities;
+
     for (uint32_t i = 0; i < scene->entityCount; i++)
     {
-        renderEntity(scene->entities[i], renderer->camera);
-        renderWireframe(scene->entities[i], renderer->camera);
+        vec2s pos = entities[i]->transform.position;
+        vec2s camPos = renderer->camera->position;
+
+        if (isEntityOnScreen(entities[i], renderer->camera))
+        {
+            renderEntity(entities[i], renderer->camera);
+        }
+        // renderWireframe(scene->entities[i], renderer->camera);
+        // renderCollider(scene->entities[i], renderer->camera);
     }
 }
 
@@ -121,6 +130,34 @@ void renderWireframe(Entity *entity, Camera2D *camera)
     shaderSetMat4(wireframe, "projection", cameraGetProjectionMatrix(camera));
     shaderSetMat4(wireframe, "view", cameraGetViewMatrix(camera));
     shaderSetMat4(wireframe, "model", entityGetTransformationMatrix(entity));
+
+    bindMesh(quad);
+    drawMeshWireframe(quad);
+}
+
+void renderCollider(Entity *entity, Camera2D *camera)
+{
+    static Shader *wireframe = NULL;
+
+    if (!wireframe)
+    {
+        wireframe = newShader("../assets/shaders/collider.vert", "../assets/shaders/collider.frag");
+    }
+
+    bindShader(wireframe);
+
+    mat4s transformation = GLMS_MAT4_IDENTITY_INIT;
+
+    vec2s pos = entity->transform.position;
+    vec2s min = entity->collider.bound.min;
+    vec2s max = entity->collider.bound.max;
+
+    transformation = glms_translate(transformation, (vec3s){pos.x, pos.y, 0.0f});
+    transformation = glms_scale(transformation, (vec3s){max.x - min.x, max.y - min.y, 0.0f});
+
+    shaderSetMat4(wireframe, "projection", cameraGetProjectionMatrix(camera));
+    shaderSetMat4(wireframe, "view", cameraGetViewMatrix(camera));
+    shaderSetMat4(wireframe, "model", transformation);
 
     bindMesh(quad);
     drawMeshWireframe(quad);

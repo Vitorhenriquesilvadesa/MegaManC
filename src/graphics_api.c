@@ -36,8 +36,6 @@ void initGraphicsAPI(void *self)
 
     Window *window = api->window;
 
-    glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
-
     api->window->nativeWindow = glfwCreateWindow(window->size.x, window->size.y, window->title, NULL, NULL);
     glfwMakeContextCurrent(api->window->nativeWindow);
 

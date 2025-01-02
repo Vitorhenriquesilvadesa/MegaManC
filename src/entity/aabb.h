@@ -3,8 +3,17 @@
 
 #define CGLM_USE_STRUCT
 #include <cglm/struct.h>
+#include <stdint.h>
 
 typedef struct Entity Entity;
+
+typedef enum
+{
+    OVERLAP_LEFT = (1 << 0),
+    OVERLAP_RIGHT = (1 << 1),
+    OVERLAP_UP = (1 << 2),
+    OVERLAP_DOWN = (1 << 3),
+} AABBOverlap;
 
 typedef struct
 {
@@ -17,12 +26,14 @@ typedef struct
 
 typedef struct
 {
-    AABB a;
-    AABB b;
+    Entity *other;
     vec2s normal;
+    uint8_t overlap;
 } AABBColisionData;
 
 AABB *newAABB(vec2s min, vec2s max);
 bool AABBIntersect(struct Entity *a, struct Entity *b);
+AABBColisionData calculateCollisionData(Entity *a, Entity *b);
+void resolveCollision(Entity *a, Entity *b, AABBColisionData *collisionData);
 
 #endif

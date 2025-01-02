@@ -18,6 +18,8 @@ typedef struct
 } Game;
 
 Service *getGameInstanceService(ServiceType type);
+Scene *getGameInstanceActiveScene();
+float getGameInstanceDeltaTime();
 void gameLoop(Game *game);
 void calculateGameDeltaTime(Game *game);
 void initGame(Game *game);
@@ -31,7 +33,6 @@ void initServices(Game *game);
 void setGameInstance(Game *game);
 void setGameInstanceFlag(GameFlag flag, FlagFunction function);
 bool getGameInstanceFlag(GameFlag flag, ServiceType type);
-Scene *getGameInstanceActiveScene();
 
 bool isKeyPressed(uint32_t key);
 

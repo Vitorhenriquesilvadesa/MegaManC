@@ -7,6 +7,7 @@ typedef struct
 {
     Animation *idle;
     Animation *walk;
+    Animation *jump;
 } MegamanResources;
 
 typedef enum
@@ -18,10 +19,23 @@ typedef struct
 {
     Entity entity;
     MegamanState state;
+    vec2s speed;
+    float gravity;
+    float maxSpeed;
+    float maxFallSpeed;
+    float jumpStrength;
+    bool isJumping;
+    bool isFalling;
+    bool isMoving;
+    bool isOnFloor;
+    bool isLeftWall;
+    bool isRightWall;
+    bool isOnCeil;
 } Megaman;
 
 Megaman *newMegaman(vec2s position);
 
-void updateMegaman(void *self, float dt);
+void onUpdateMegaman(void *self, float dt);
+void onCollisionMegaman(void *self, AABBColisionData data);
 
 #endif

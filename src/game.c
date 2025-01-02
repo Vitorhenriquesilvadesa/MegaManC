@@ -18,13 +18,30 @@ Service *getGameInstanceService(ServiceType type)
 
 void gameLoop(Game *game)
 {
-    Scene *scene = getTestScene();
-    CAST_API(ObjectPoolAPI, game->services.services[SERVICE_TYPE_OBJECT_POOL]);
-    api->scene = scene;
+    updateGame(game);
+
+    float fps = 144.0f;
+
+    float frameTime = 1.0f / fps;
+
+    float accumulatedTime = 0.0f;
+
+    float lastTime = glfwGetTime();
 
     while (!getGameInstanceFlag(FLAG_WINDOW_CLOSED, SERVICE_TYPE_GRAPHICS))
     {
-        updateGame(game);
+        float currentTime = glfwGetTime();
+        float deltaTime = currentTime - lastTime;
+        lastTime = currentTime;
+
+        accumulatedTime += deltaTime;
+
+        while (accumulatedTime >= frameTime)
+        {
+            updateGame(game);
+
+            accumulatedTime -= frameTime;
+        }
     }
 }
 
@@ -46,7 +63,7 @@ void initGame(Game *game)
 
     initServices(game);
 
-    Scene *scene = newScene();
+    Scene *scene = getTestScene();
 
     CAST_API(ObjectPoolAPI, game->services.services[SERVICE_TYPE_OBJECT_POOL]);
     api->scene = scene;
@@ -129,6 +146,11 @@ Scene *getGameInstanceActiveScene()
     CAST_API(ObjectPoolAPI, instance->services.services[SERVICE_TYPE_OBJECT_POOL]);
 
     return api->scene;
+}
+
+float getGameInstanceDeltaTime()
+{
+    return instance->dt;
 }
 
 bool isKeyPressed(uint32_t key)

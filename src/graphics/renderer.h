@@ -19,7 +19,7 @@ typedef struct
     float bottom;
 } OrthographicFrustum2D;
 
-typedef struct
+typedef struct Camera2D
 {
     vec2s position;
     float zoom;
@@ -40,5 +40,6 @@ Renderer2D *newRenderer();
 void render(Renderer2D *renderer, Scene *scene);
 void renderEntity(Entity *entity, Camera2D *camera);
 void renderWireframe(Entity *entity, Camera2D *camera);
+void renderCollider(Entity *entity, Camera2D *camera);
 
 #endif

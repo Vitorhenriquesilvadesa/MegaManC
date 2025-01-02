@@ -17,17 +17,105 @@ bool AABBIntersect(Entity *a, Entity *b)
     AABB coliderA = a->collider;
     AABB coliderB = b->collider;
 
-    if (coliderA.bound.max.x + a->position.x < coliderB.bound.min.x + b->position.x ||
-        coliderA.bound.min.x + a->position.x > coliderB.bound.max.x + b->position.x)
+    Transform transformA = a->transform;
+    Transform transformB = b->transform;
+
+    if (coliderA.bound.max.x + transformA.position.x < coliderB.bound.min.x + transformB.position.x ||
+        coliderA.bound.min.x + transformA.position.x > coliderB.bound.max.x + transformB.position.x)
     {
         return false;
     }
 
-    if (coliderA.bound.max.y + a->position.y < coliderB.bound.min.y + b->position.y ||
-        coliderA.bound.min.y + a->position.y > coliderB.bound.max.y + b->position.y)
+    if (coliderA.bound.max.y + transformA.position.y < coliderB.bound.min.y + transformB.position.y ||
+        coliderA.bound.min.y + transformA.position.y > coliderB.bound.max.y + transformB.position.y)
     {
         return false;
     }
 
     return true;
+}
+
+AABBColisionData calculateCollisionData(Entity *a, Entity *b)
+{
+    AABB colA = a->collider;
+    AABB colB = b->collider;
+
+    Transform transformA = a->transform;
+    Transform transformB = b->transform;
+
+    vec2s aMin = glms_vec2_add(colA.bound.min, transformA.position);
+    vec2s aMax = glms_vec2_add(colA.bound.max, transformA.position);
+    vec2s bMin = glms_vec2_add(colB.bound.min, transformB.position);
+    vec2s bMax = glms_vec2_add(colB.bound.max, transformB.position);
+
+    float overlapX1 = bMax.x - aMin.x;
+    float overlapX2 = aMax.x - bMin.x;
+    float overlapY1 = bMax.y - aMin.y;
+    float overlapY2 = aMax.y - bMin.y;
+
+    AABBColisionData data;
+    data.other = b;
+    data.overlap = 0;
+    data.normal = (vec2s){0.0f, 0.0f};
+
+    if (overlapX1 > 0 && overlapX2 > 0 && overlapY1 > 0 && overlapY2 > 0)
+    {
+        float overlapX = fminf(overlapX1, overlapX2);
+        float overlapY = fminf(overlapY1, overlapY2);
+
+        if (overlapX < overlapY)
+        {
+            data.overlap |= (overlapX1 < overlapX2) ? OVERLAP_LEFT : OVERLAP_RIGHT;
+            data.normal = (vec2s){(overlapX1 < overlapX2) ? -1.0f : 1.0f, 0.0f};
+        }
+        else
+        {
+            data.overlap |= (overlapY1 > overlapY2) ? OVERLAP_DOWN : OVERLAP_UP;
+            data.normal = (vec2s){0.0f, (overlapY1 < overlapY2) ? -1.0f : 1.0f};
+        }
+    }
+
+    return data;
+}
+
+void resolveCollision(Entity *a, Entity *b, AABBColisionData *collisionData)
+{
+    vec2s move = {0.0f, 0.0f};
+
+    Entity *movable = (!a->isSolid && b->isSolid) ? a : (!b->isSolid && a->isSolid) ? b
+                                                                                    : NULL;
+    if (!movable)
+        return;
+
+    AABB colA = a->collider;
+    AABB colB = b->collider;
+
+    Transform transformA = a->transform;
+    Transform transformB = b->transform;
+
+    vec2s aMin = glms_vec2_add(colA.bound.min, transformA.position);
+    vec2s aMax = glms_vec2_add(colA.bound.max, transformA.position);
+    vec2s bMin = glms_vec2_add(colB.bound.min, transformB.position);
+    vec2s bMax = glms_vec2_add(colB.bound.max, transformB.position);
+
+    float overlapX1 = bMax.x - aMin.x;
+    float overlapX2 = aMax.x - bMin.x;
+    float overlapY1 = bMax.y - aMin.y;
+    float overlapY2 = aMax.y - bMin.y;
+
+    float overlapX = fminf(overlapX1, overlapX2);
+    float overlapY = fminf(overlapY1, overlapY2);
+
+    if (overlapX < overlapY)
+    {
+        move.x = (overlapX1 < overlapX2 ? -overlapX : overlapX);
+    }
+    else
+    {
+        move.y = (overlapY1 < overlapY2 ? -overlapY : overlapY);
+    }
+
+    move = glms_vec2_add(move, glms_vec2_scale(collisionData->normal, 0.01f));
+
+    movable->transform.position = glms_vec2_add(movable->transform.position, move);
 }

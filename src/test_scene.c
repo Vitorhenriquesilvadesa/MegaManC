@@ -7,14 +7,34 @@
 Scene *getTestScene()
 {
     Scene *scene = newScene();
-    Megaman *megaman = newMegaman((vec2s){0.0f, 1.0f});
+    Megaman *megaman = newMegaman((vec2s){0.0f, -48.0f});
     addObjectToScene(scene, AS_ENTITY_PTR(megaman));
 
-    for (int x = -128; x < 128; x += 16)
+    int bricks[14][16] = {
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    };
+
+    for (int i = 0; i < 14; i++)
     {
-        for (int y = 16; y < 32; y += 16)
+        for (int j = 0; j < 16; j++)
         {
-            addObjectToScene(scene, newBrick((vec2s){x, y}));
+            if (bricks[i][j])
+            {
+                addObjectToScene(scene, newBrick((vec2s){j * 16 - 128, i * 16 - 112}));
+            }
         }
     }
 
@@ -34,10 +54,15 @@ Entity *newBrick(vec2s position)
         renderer = newSpriteRenderer(shader, animation);
     }
 
-    Entity *entity = newEntity(ENTITY_TYPE_BRICK, updateBrick, (vec2s){position.x + 8, position.y + 8}, TILE_SIZE, renderer);
+    Entity *entity = newEntity(ENTITY_TYPE_BRICK, onUpdateBrick, onCollisionBrick, (vec2s){position.x + 8, position.y + 8},
+                               TILE_SIZE, (vec2s){0.0f, 0.0f}, TILE_SIZE, true, renderer);
     return entity;
 }
 
-void updateBrick(void *self, float dt)
+void onUpdateBrick(void *self, float dt)
+{
+}
+
+void onCollisionBrick(void *self, AABBColisionData data)
 {
 }
