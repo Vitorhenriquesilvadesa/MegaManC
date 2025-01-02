@@ -1,7 +1,7 @@
 #include <animation.h>
 #include <allocator.h>
 
-Animation *newAnimation(uint32_t frameCount, uint32_t speed, Texture *texture)
+Animation *newAnimation(uint32_t frameCount, uint32_t speed, Texture *texture, bool isLooping, AnimationPlay play)
 {
     Animation *animation = ALLOCATE(Animation, 1);
 
@@ -10,6 +10,8 @@ Animation *newAnimation(uint32_t frameCount, uint32_t speed, Texture *texture)
     animation->frameCount = frameCount;
     animation->texture = texture;
     animation->speed = speed;
+    animation->isLooping = isLooping;
+    animation->play = play;
 
     return animation;
 }
@@ -22,7 +24,18 @@ void updateAnimation(Animation *animation, float dt)
 
     if (animation->elapsedTime >= frameTime)
     {
-        animation->currentFrame = (animation->currentFrame + 1) % animation->frameCount;
+        if (animation->currentFrame == animation->frameCount - 1)
+        {
+            if (animation->isLooping)
+            {
+                animation->currentFrame = 0;
+            }
+        }
+        else
+        {
+            animation->currentFrame++;
+        }
+
         animation->elapsedTime = 0.0f;
     }
 }

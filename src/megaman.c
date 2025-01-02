@@ -5,21 +5,22 @@
 #include <allocator.h>
 #include <GLFW/glfw3.h>
 
-Animation *idle = NULL;
-Animation *walk = NULL;
+#define MEGAMAN_SPEED 90.0f
+
+static MegamanResources megamanResources = {NULL, NULL};
 
 static void createAnimations()
 {
-    if (!walk)
+    if (!megamanResources.walk)
     {
         Texture *texture = newTextureFromImage("../assets/sprites/megaman/walk.png");
-        walk = newAnimation(4, 10, texture);
+        megamanResources.walk = newAnimation(4, 10, texture, true, PLAY_FROM_BEGIN);
     }
 
-    if (!idle)
+    if (!megamanResources.idle)
     {
         Texture *texture = newTextureFromImage("../assets/sprites/megaman/idle.png");
-        idle = newAnimation(15, 10, texture);
+        megamanResources.idle = newAnimation(15, 10, texture, true, PLAY_FROM_BEGIN);
     }
 }
 
@@ -31,7 +32,7 @@ Megaman *newMegaman(vec2s position)
 
     createAnimations();
 
-    SpriteRenderer *renderer = newSpriteRenderer(shader, idle);
+    SpriteRenderer *renderer = newSpriteRenderer(shader, megamanResources.idle);
     Entity entity;
 
     initEntity(&entity, ENTITY_TYPE_MEGAMAN, updateMegaman, position, MEGAMAN_SIZE, renderer);
@@ -45,22 +46,28 @@ void updateMegaman(void *self, float dt)
 {
     Megaman *megaman = (Megaman *)self;
 
-    if (isKeyPressed(GLFW_KEY_RIGHT))
-    {
-        megaman->entity.position.x += 90.0f * dt;
-        megaman->entity.isMirrored = false;
-        megaman->entity.renderer->currentAnimation = walk;
-    }
+    GraphicsAPI *graphics = (GraphicsAPI *)getGameInstanceService(SERVICE_TYPE_GRAPHICS);
 
-    if (isKeyPressed(GLFW_KEY_LEFT))
-    {
-        megaman->entity.position.x -= 90.0f * dt;
-        megaman->entity.isMirrored = true;
-        megaman->entity.renderer->currentAnimation = walk;
-    }
+    graphics->renderer->camera->position = megaman->entity.position;
 
-    if (!isKeyPressed(GLFW_KEY_LEFT) && !isKeyPressed(GLFW_KEY_RIGHT))
+    float resultantSpeed = 0.0f;
+
+    resultantSpeed += MEGAMAN_SPEED * -isKeyPressed(GLFW_KEY_LEFT) + MEGAMAN_SPEED * isKeyPressed(GLFW_KEY_RIGHT);
+
+    if (resultantSpeed == 0.0f)
     {
-        megaman->entity.renderer->currentAnimation = idle;
+        megaman->entity.renderer->currentAnimation = megamanResources.idle;
+    }
+    else
+    {
+        megaman->entity.position.x += resultantSpeed * dt;
+        if (megaman->entity.renderer->currentAnimation != megamanResources.walk)
+        {
+            megamanResources.walk->currentFrame = 0;
+            megamanResources.walk->elapsedTime = 0.0f;
+            megaman->entity.renderer->currentAnimation = megamanResources.walk;
+        }
+
+        megaman->entity.isMirrored = resultantSpeed < 0.0f;
     }
 }

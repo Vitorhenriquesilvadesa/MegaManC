@@ -64,6 +64,20 @@ void updateGraphicsAPI(void *self, float dt)
 {
     CAST_API(GraphicsAPI, self);
 
+    static float elapsedTime = 0.0f;
+
+    elapsedTime += dt;
+
+    if (elapsedTime >= 1.0f)
+    {
+        elapsedTime = 0.0f;
+        char buffer[32];
+
+        sprintf(buffer, "Mega Man | FPS: %d", (int)(1.0f / dt));
+
+        glfwSetWindowTitle(api->window->nativeWindow, buffer);
+    }
+
     glClear(GL_COLOR_BUFFER_BIT);
 
     render(api->renderer, getGameInstanceActiveScene());

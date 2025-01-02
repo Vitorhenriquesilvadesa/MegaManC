@@ -5,6 +5,7 @@
 #include <cglm/struct.h>
 
 #include <sprite.h>
+#include <aabb.h>
 
 #define CAST_ENTITY(type, value) type *entity = (type *)value
 
@@ -18,7 +19,7 @@ typedef enum
     ENTITY_TYPE_BRICK,
 } EntityType;
 
-typedef struct
+typedef struct Entity
 {
     EntityType type;
     EntityUpdateFn update;
@@ -26,6 +27,7 @@ typedef struct
     vec2s scale;
     bool isMirrored;
     SpriteRenderer *renderer;
+    AABB collider;
 } Entity;
 
 Entity *newEntity(EntityType type, EntityUpdateFn update, vec2s position, vec2s scale, SpriteRenderer *renderer);

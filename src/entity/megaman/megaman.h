@@ -5,7 +5,19 @@
 
 typedef struct
 {
+    Animation *idle;
+    Animation *walk;
+} MegamanResources;
+
+typedef enum
+{
+    MEGAMAN_STATE_IDLE,
+} MegamanState;
+
+typedef struct
+{
     Entity entity;
+    MegamanState state;
 } Megaman;
 
 Megaman *newMegaman(vec2s position);
