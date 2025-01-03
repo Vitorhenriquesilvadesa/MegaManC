@@ -7,8 +7,7 @@
 Scene *getTestScene()
 {
     Scene *scene = newScene();
-    Megaman *megaman = newMegaman((vec2s){0.0f, -48.0f});
-    addObjectToScene(scene, AS_ENTITY_PTR(megaman));
+    Megaman *megaman = newMegaman((vec2s){0.0f, -40.0f});
 
     int bricks[14][16] = {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -17,7 +16,7 @@ Scene *getTestScene()
         {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1},
         {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -37,6 +36,8 @@ Scene *getTestScene()
             }
         }
     }
+
+    addObjectToScene(scene, AS_ENTITY_PTR(megaman));
 
     return scene;
 }

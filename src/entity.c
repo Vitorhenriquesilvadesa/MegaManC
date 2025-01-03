@@ -81,3 +81,22 @@ bool isEntityOnScreen(Entity *entity, Camera2D *camera)
         pos.y > camPos.y - 112 - scale.y / 2.0f &&
         pos.y < camPos.y + 128 + scale.y / 2.0f);
 }
+
+void setAnimation(Entity *entity, Animation *animation, AnimationPlay play)
+{
+    if (animation == entity->renderer->currentAnimation)
+    {
+        return;
+    }
+
+    uint32_t frameCount = animation->frameCount;
+    uint32_t currentFrame = entity->renderer->currentAnimation->currentFrame;
+
+    if (currentFrame > frameCount || play == PLAY_FROM_BEGIN)
+    {
+        currentFrame = 0;
+    }
+
+    entity->renderer->currentAnimation = animation;
+    entity->renderer->currentAnimation->currentFrame = currentFrame;
+}

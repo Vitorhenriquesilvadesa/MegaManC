@@ -13,6 +13,7 @@ typedef struct
     ServiceSet services;
     bool isRunning;
     float dt;
+    float lt;
     FlagFunction *flags;
     Scene *activeScene;
 } Game;

@@ -4,6 +4,7 @@
 #include <object_pool_api.h>
 #include <graphics_api.h>
 #include <allocator.h>
+#include <ray_cast.h>
 #include <GLFW/glfw3.h>
 
 #define MEGAMAN_MAX_SPEED 90.0f
@@ -46,7 +47,7 @@ Megaman *newMegaman(vec2s position)
     Entity entity;
 
     initEntity(&entity, ENTITY_TYPE_MEGAMAN, onUpdateMegaman, onCollisionMegaman, position, MEGAMAN_SIZE,
-               (vec2s){9.0f, 3.0f}, (vec2s){21.0f, 26.0f}, false, renderer);
+               (vec2s){10.0f, 3.0f}, (vec2s){20.0f, 26.0f}, false, renderer);
 
     Megaman *megaman = ALLOCATE(Megaman, 1);
     megaman->entity = entity;
@@ -59,89 +60,25 @@ Megaman *newMegaman(vec2s position)
     return megaman;
 }
 
+static bool isOnRightWall(Entity *entity);
+static bool isOnLeftWall(Entity *entity);
 static bool isOnFloor(Entity *entity);
+static bool isOnCeil(Entity *entity);
 
 void onUpdateMegaman(void *self, float dt)
 {
     Megaman *megaman = (Megaman *)self;
 
-    megaman->isOnFloor = isOnFloor(&megaman->entity);
-
     GraphicsAPI *graphics = (GraphicsAPI *)getGameInstanceService(SERVICE_TYPE_GRAPHICS);
 
-    graphics->renderer->camera->position.x = megaman->entity.transform.position.x;
+    megaman->isRightWall = isOnRightWall((Entity *)self);
+    megaman->isLeftWall = isOnLeftWall((Entity *)self);
+    megaman->isOnFloor = isOnFloor((Entity *)self);
+    megaman->isOnCeil = isOnCeil((Entity *)self);
 
-    megaman->speed.x = MEGAMAN_MAX_SPEED * -isKeyPressed(GLFW_KEY_LEFT) + MEGAMAN_MAX_SPEED * isKeyPressed(GLFW_KEY_RIGHT);
+    megaman->speed.x = -isKeyPressed(GLFW_KEY_LEFT) * megaman->maxSpeed + isKeyPressed(GLFW_KEY_RIGHT) * megaman->maxSpeed;
+
     megaman->isMoving = megaman->speed.x != 0.0f;
-
-    if ((megaman->isLeftWall && megaman->speed.x < 0.0f) || (megaman->isRightWall && megaman->speed.x > 0.0f))
-    {
-        megaman->speed.x = 0.0f;
-    }
-
-    static bool jumped = false;
-
-    if (isKeyPressed(GLFW_KEY_Z) && !jumped && megaman->isOnFloor && !megaman->isJumping)
-    {
-        jumped = true;
-        megaman->isOnFloor = false;
-        megaman->isFalling = false;
-        megaman->isJumping = true;
-        megaman->entity.transform.position.y -= 1.0f;
-        megaman->speed.y = -megaman->jumpStrength;
-        megaman->entity.renderer->currentAnimation = megamanResources.jump;
-    }
-
-    if (!isKeyPressed(GLFW_KEY_Z))
-    {
-        jumped = false;
-    }
-
-    if (megaman->speed.y != 0.0f && megaman->entity.renderer->currentAnimation != megamanResources.jump)
-    {
-        megaman->entity.renderer->currentAnimation = megamanResources.jump;
-    }
-
-    if (megaman->isOnCeil && megaman->speed.y < 0.0f)
-    {
-        megaman->speed.y = 0.0f;
-    }
-
-    if (!megaman->isOnFloor)
-    {
-        if (megaman->speed.y < megaman->maxFallSpeed)
-        {
-            megaman->speed.y += megaman->gravity * dt;
-        }
-    }
-    else
-    {
-        if (megaman->speed.y > 0.0f)
-        {
-            megaman->speed.y = 0.0f;
-            megaman->isJumping = false;
-        }
-    }
-
-    if (megaman->isOnFloor)
-    {
-        if (!megaman->isMoving)
-        {
-            if (megaman->entity.renderer->currentAnimation != megamanResources.idle)
-            {
-                megaman->entity.renderer->currentAnimation = megamanResources.idle;
-            }
-        }
-        else
-        {
-            if (megaman->entity.renderer->currentAnimation != megamanResources.walk)
-            {
-                megamanResources.walk->currentFrame = 0;
-                megamanResources.walk->elapsedTime = 0.0f;
-                megaman->entity.renderer->currentAnimation = megamanResources.walk;
-            }
-        }
-    }
 
     if (isKeyPressed(GLFW_KEY_LEFT))
     {
@@ -153,97 +90,231 @@ void onUpdateMegaman(void *self, float dt)
         megaman->entity.isMirrored = false;
     }
 
-    if (!isKeyPressed(GLFW_KEY_Z) && megaman->isJumping && !megaman->isFalling &&
-        megaman->speed.y < 0.0f)
+    if (!isKeyPressed(GLFW_KEY_Z) && megaman->speed.y > 100.0f)
     {
-        megaman->isFalling = true;
+        megaman->speed.y = 100.0f;
+    }
+
+    if (megaman->isMoving && megaman->isOnFloor)
+    {
+        setAnimation(&megaman->entity, megamanResources.walk, PLAY_FROM_BEGIN);
+    }
+
+    if (!megaman->isMoving && megaman->isOnFloor)
+    {
+        setAnimation(&megaman->entity, megamanResources.idle, PLAY_FROM_BEGIN);
+    }
+
+    if (!megaman->isOnFloor)
+    {
+        setAnimation(&megaman->entity, megamanResources.jump, PLAY_FROM_BEGIN);
+    }
+
+    if (!megaman->isOnFloor)
+    {
+        megaman->speed.y -= megaman->gravity * dt;
+    }
+
+    static bool floorSet = false;
+    static bool ceilSet = false;
+
+    if (megaman->isOnFloor && !floorSet)
+    {
+        floorSet = true;
         megaman->speed.y = 0.0f;
     }
 
-    megaman->entity.transform.position.x += megaman->speed.x * dt;
-    megaman->entity.transform.position.y += megaman->speed.y * dt;
+    if (megaman->isOnCeil && !ceilSet)
+    {
+        ceilSet = true;
+        megaman->speed.y = 0.0f;
+    }
 
-    megaman->isLeftWall = false;
-    megaman->isRightWall = false;
+    if (!megaman->isOnFloor)
+    {
+        floorSet = false;
+    }
+
+    if (!megaman->isOnCeil)
+    {
+        ceilSet = false;
+    }
+
+    if (!isKeyPressed(GLFW_KEY_LEFT) && !isKeyPressed(GLFW_KEY_RIGHT))
+    {
+        megaman->speed.x = 0.0f;
+    }
+
+    static bool jumped = false;
+
+    if (isKeyPressed(GLFW_KEY_Z) && megaman->isOnFloor && !jumped)
+    {
+        jumped = true;
+        megaman->speed.y = megaman->jumpStrength;
+    }
+
+    if (!isKeyPressed(GLFW_KEY_Z))
+    {
+        jumped = false;
+    }
+
+    if (megaman->speed.x > 0.0f && !megaman->isRightWall)
+    {
+        megaman->entity.transform.position.x += megaman->speed.x * dt;
+    }
+
+    if (megaman->speed.x < 0.0f && !megaman->isLeftWall)
+    {
+        megaman->entity.transform.position.x += megaman->speed.x * dt;
+    }
+
+    megaman->entity.transform.position.y -= megaman->speed.y * dt;
+
+    graphics->renderer->camera->position.x = megaman->entity.transform.position.x;
 }
 
-static void updateInfo(Megaman *megaman, float verticalOffset)
+static bool isOnRightWall(Entity *entity)
 {
-    ObjectPoolAPI *pool = (ObjectPoolAPI *)getGameInstanceService(SERVICE_TYPE_OBJECT_POOL);
-    Scene *scene = pool->scene;
+    vec2s min = entity->collider.bound.min;
+    vec2s max = entity->collider.bound.max;
 
-    Entity *entity = &megaman->entity;
+    vec2s aabbPos = (vec2s){
+        entity->transform.position.x + (min.x + max.x) / 2.0f,
+        entity->transform.position.y + (min.y + max.y) / 2.0f};
 
-    vec2s entityPos = entity->transform.position;
-    vec2s checkPos = {entityPos.x, entityPos.y - 1.0f};
+    float halfHeight = (max.y - min.y) / 2.0f - 1.0f;
+    float halfWidth = (max.x - min.x) / 2.0f + 1.0f;
 
-    megaman->isOnFloor = false;
-    megaman->isLeftWall = false;
-    megaman->isRightWall = false;
+    vec2s rayOriginT = {
+        aabbPos.x + halfWidth + 1.0f,
+        aabbPos.y + halfHeight};
 
-    for (uint32_t i = 0; i < scene->entityCount; i++)
+    vec2s rayOriginM = {
+        aabbPos.x + halfWidth + 1.0f,
+        aabbPos.y};
+
+    vec2s rayOriginB = {
+        aabbPos.x + halfWidth + 1.0f,
+        aabbPos.y - halfHeight};
+
+    Ray raycastT = {rayOriginT, (vec2s){1.0f, 0.0f}};
+    Ray raycastM = {rayOriginM, (vec2s){1.0f, 0.0f}};
+    Ray raycastB = {rayOriginB, (vec2s){1.0f, 0.0f}};
+
+    if (raycastHit(raycastM, 12))
     {
-        Entity *other = scene->entities[i];
-
-        if (entity != other && AABBIntersect(entity, other))
-        {
-            AABB otherAABB = other->collider;
-            vec2s otherPos = other->transform.position;
-
-            if (fabsf(otherPos.y - entityPos.y) < verticalOffset && otherPos.x < entityPos.x)
-            {
-                megaman->isLeftWall = true;
-            }
-
-            if (fabsf(otherPos.y - entityPos.y) < verticalOffset && otherPos.x > entityPos.x)
-            {
-                megaman->isRightWall = true;
-            }
-        }
+        return true;
     }
+    else if (raycastHit(raycastB, 12))
+    {
+        return true;
+    }
+
+    return raycastHit(raycastT, 12);
+}
+
+static bool isOnLeftWall(Entity *entity)
+{
+    vec2s min = entity->collider.bound.min;
+    vec2s max = entity->collider.bound.max;
+
+    vec2s aabbPos = (vec2s){
+        entity->transform.position.x + (min.x + max.x) / 2.0f,
+        entity->transform.position.y + (min.y + max.y) / 2.0f};
+
+    float halfHeight = (max.y - min.y) / 2.0f - 1.0f;
+    float halfWidth = (max.x - min.x) / 2.0f + 1.0f;
+
+    vec2s rayOriginT = {
+        aabbPos.x - halfWidth - 1.0f,
+        aabbPos.y + halfHeight};
+
+    vec2s rayOriginM = {
+        aabbPos.x - halfWidth - 1.0f,
+        aabbPos.y};
+
+    vec2s rayOriginB = {
+        aabbPos.x - halfWidth - 1.0f,
+        aabbPos.y - halfHeight};
+
+    Ray raycastT = {rayOriginT, (vec2s){-1.0f, 0.0f}};
+    Ray raycastM = {rayOriginM, (vec2s){-1.0f, 0.0f}};
+    Ray raycastB = {rayOriginB, (vec2s){-1.0f, 0.0f}};
+
+    if (raycastHit(raycastM, 12))
+    {
+        return true;
+    }
+    else if (raycastHit(raycastB, 12))
+    {
+        return true;
+    }
+
+    return raycastHit(raycastT, 12);
 }
 
 static bool isOnFloor(Entity *entity)
 {
-    ObjectPoolAPI *pool = (ObjectPoolAPI *)getGameInstanceService(SERVICE_TYPE_OBJECT_POOL);
-    Scene *scene = pool->scene;
+    vec2s min = entity->collider.bound.min;
+    vec2s max = entity->collider.bound.max;
 
-    vec2s entityPos = entity->transform.position;
-    vec2s checkPos = {entityPos.x, entityPos.y - 1.0f};
+    vec2s aabbPos = (vec2s){
+        entity->transform.position.x + (min.x + max.x) / 2.0f,
+        entity->transform.position.y + (min.y + max.y) / 2.0f};
 
-    for (uint32_t i = 0; i < scene->entityCount; i++)
+    float halfHeight = (max.y - min.y) / 2.0f;
+    float halfWidth = (max.x - min.x) / 2.0f;
+
+    vec2s rayOriginL = {
+        aabbPos.x - halfWidth,
+        aabbPos.y + halfHeight + 0.1f};
+
+    vec2s rayOriginR = {
+        aabbPos.x + halfWidth,
+        aabbPos.y + halfHeight + 0.1f};
+
+    Ray raycastL = {rayOriginL, (vec2s){0.0f, -1.0f}};
+    Ray raycastR = {rayOriginR, (vec2s){0.0f, -1.0f}};
+
+    if (raycastHit(raycastR, 9))
     {
-        Entity *other = scene->entities[i];
-
-        if (entity != other && AABBIntersect(entity, other))
-        {
-            if (checkPos.y <= other->transform.position.y)
-            {
-                return true;
-            }
-        }
+        return true;
     }
-    return false;
+
+    return raycastHit(raycastL, 9);
+}
+
+static bool isOnCeil(Entity *entity)
+{
+    vec2s min = entity->collider.bound.min;
+    vec2s max = entity->collider.bound.max;
+
+    vec2s aabbPos = (vec2s){
+        entity->transform.position.x + (min.x + max.x) / 2.0f,
+        entity->transform.position.y + (min.y + max.y) / 2.0f};
+
+    float halfHeight = (max.y - min.y) / 2.0f;
+    float halfWidth = (max.x - min.x) / 2.0f;
+
+    vec2s rayOriginL = {
+        aabbPos.x - halfWidth,
+        aabbPos.y - halfHeight - 0.1f};
+
+    vec2s rayOriginR = {
+        aabbPos.x + halfWidth,
+        aabbPos.y - halfHeight - 0.1f};
+
+    Ray raycastL = {rayOriginL, (vec2s){0.0f, 1.0f}};
+    Ray raycastR = {rayOriginR, (vec2s){0.0f, 1.0f}};
+
+    if (raycastHit(raycastR, 10))
+    {
+        return true;
+    }
+
+    return raycastHit(raycastL, 10);
 }
 
 void onCollisionMegaman(void *self, AABBColisionData data)
 {
-    Megaman *megaman = (Megaman *)self;
-
-    if (data.other->type == ENTITY_TYPE_BRICK)
-    {
-        bool up = (data.overlap & OVERLAP_UP) != 0;
-
-        updateInfo(megaman, 14.0f);
-
-        megaman->isOnCeil = up;
-
-        bool floor = isOnFloor(&megaman->entity);
-        megaman->isOnFloor = floor;
-
-        if (floor && megaman->isJumping)
-        {
-            megaman->isJumping = false;
-        }
-    }
 }

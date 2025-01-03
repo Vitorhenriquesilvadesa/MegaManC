@@ -28,6 +28,10 @@ void gameLoop(Game *game)
 
     float lastTime = glfwGetTime();
 
+    game->lt = lastTime;
+
+    bool lockFPS = false;
+
     while (!getGameInstanceFlag(FLAG_WINDOW_CLOSED, SERVICE_TYPE_GRAPHICS))
     {
         float currentTime = glfwGetTime();
@@ -36,21 +40,26 @@ void gameLoop(Game *game)
 
         accumulatedTime += deltaTime;
 
-        while (accumulatedTime >= frameTime)
+        if (lockFPS)
+        {
+            while (accumulatedTime >= frameTime)
+            {
+                updateGame(game);
+                accumulatedTime -= frameTime;
+            }
+        }
+        else
         {
             updateGame(game);
-
-            accumulatedTime -= frameTime;
         }
     }
 }
 
 void calculateGameDeltaTime(Game *game)
 {
-    static float lastTime = 0.0f;
     float currentTime = (float)glfwGetTime();
-    game->dt = currentTime - lastTime;
-    lastTime = currentTime;
+    game->dt = currentTime - game->lt;
+    game->lt = currentTime;
 }
 
 void initGame(Game *game)

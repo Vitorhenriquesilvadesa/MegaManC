@@ -37,6 +37,10 @@ Renderer2D *newRenderer()
 {
     Renderer2D *renderer = ALLOCATE(Renderer2D, 1);
 
+    renderer->lines = ALLOCATE(Line, 32);
+    renderer->lineCount = 0;
+    renderer->lineCapacity = 32;
+
     vec2s vertices[4] = {
         {-0.5f, -0.5f},
         {0.5f, -0.5f},
@@ -72,6 +76,7 @@ Renderer2D *newRenderer()
     Camera2D *camera = newCamera(frustum);
 
     renderer->camera = camera;
+
     return renderer;
 }
 
@@ -81,16 +86,21 @@ void render(Renderer2D *renderer, Scene *scene)
 
     for (uint32_t i = 0; i < scene->entityCount; i++)
     {
-        vec2s pos = entities[i]->transform.position;
-        vec2s camPos = renderer->camera->position;
-
         if (isEntityOnScreen(entities[i], renderer->camera))
         {
             renderEntity(entities[i], renderer->camera);
         }
-        // renderWireframe(scene->entities[i], renderer->camera);
-        // renderCollider(scene->entities[i], renderer->camera);
+        // renderWireframe(entities[i], renderer->camera);
+        // renderCollider(entities[i], renderer->camera);
     }
+
+    for (size_t i = 0; i < renderer->lineCount; i++)
+    {
+        Line line = renderer->lines[i];
+        renderLine(renderer, line);
+    }
+
+    renderer->lineCount = 0;
 }
 
 void renderEntity(Entity *entity, Camera2D *camera)
@@ -137,14 +147,14 @@ void renderWireframe(Entity *entity, Camera2D *camera)
 
 void renderCollider(Entity *entity, Camera2D *camera)
 {
-    static Shader *wireframe = NULL;
+    static Shader *colliderShader = NULL;
 
-    if (!wireframe)
+    if (!colliderShader)
     {
-        wireframe = newShader("../assets/shaders/collider.vert", "../assets/shaders/collider.frag");
+        colliderShader = newShader("../assets/shaders/collider.vert", "../assets/shaders/collider.frag");
     }
 
-    bindShader(wireframe);
+    bindShader(colliderShader);
 
     mat4s transformation = GLMS_MAT4_IDENTITY_INIT;
 
@@ -155,10 +165,59 @@ void renderCollider(Entity *entity, Camera2D *camera)
     transformation = glms_translate(transformation, (vec3s){pos.x, pos.y, 0.0f});
     transformation = glms_scale(transformation, (vec3s){max.x - min.x, max.y - min.y, 0.0f});
 
-    shaderSetMat4(wireframe, "projection", cameraGetProjectionMatrix(camera));
-    shaderSetMat4(wireframe, "view", cameraGetViewMatrix(camera));
-    shaderSetMat4(wireframe, "model", transformation);
+    shaderSetMat4(colliderShader, "projection", cameraGetProjectionMatrix(camera));
+    shaderSetMat4(colliderShader, "view", cameraGetViewMatrix(camera));
+    shaderSetMat4(colliderShader, "model", transformation);
 
     bindMesh(quad);
     drawMeshWireframe(quad);
+}
+
+void renderLine(Renderer2D *renderer, Line line)
+{
+    static Shader *lineShader = NULL;
+
+    if (!lineShader)
+    {
+        lineShader = newShader("../assets/shaders/line.vert", "../assets/shaders/line.frag");
+    }
+
+    bindShader(lineShader);
+
+    shaderSetMat4(lineShader, "projection", cameraGetProjectionMatrix(renderer->camera));
+    shaderSetMat4(lineShader, "view", cameraGetViewMatrix(renderer->camera));
+
+    vec2s finalPos = (vec2s){(line.start.x + line.end.x) / 2.0, (line.start.y + line.end.y) / 2.0};
+
+    float angle = atan2(line.end.y - line.start.y, line.end.x - line.start.x);
+
+    mat4s transformation = GLMS_MAT4_IDENTITY_INIT;
+
+    transformation = glms_translate(transformation, (vec3s){finalPos.x, finalPos.y, 0.0f});
+
+    transformation = glms_rotate_z(transformation, angle);
+
+    float length = glms_vec2_distance(line.start, line.end);
+    transformation = glms_scale(transformation, (vec3s){length, 1.0f, 1.0f});
+
+    shaderSetMat4(lineShader, "model", transformation);
+
+    bindMesh(quad);
+    drawMesh(quad);
+
+    unbindTextures();
+    unbindMeshes();
+    unbindShaders();
+}
+
+void drawLine(Renderer2D *renderer, Ray ray, float distance)
+{
+    if (renderer->lineCount >= renderer->lineCapacity - 1)
+    {
+        renderer->lines = REALLOCATE(Line, renderer->lines, renderer->lineCapacity * 2);
+    }
+
+    vec2s direction = glms_vec2_normalize(ray.direction);
+    vec2s end = (vec2s){ray.origin.x + direction.x * distance, ray.origin.y + direction.y * distance};
+    renderer->lines[renderer->lineCount++] = (Line){.start = ray.origin, .end = end};
 }
