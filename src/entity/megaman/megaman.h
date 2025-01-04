@@ -43,8 +43,15 @@ void onUpdateMegaman(void *self, float dt);
 void onCollisionMegaman(void *self, AABBColisionData data);
 
 bool onMegamanShootTrigger(void *self);
-bool onMegamanJumpTrigger(void *self);
 void onMegamanShoot(void *self);
+
+bool onMegamanJumpTrigger(void *self);
 void onMegamanJump(void *self);
+
+bool onMegamanLandTrigger(void *self);
+void onMegamanLand(void *self);
+
+bool onMegamanCeilTrigger(void *self);
+void onMegamanCeil(void *self);
 
 #endif

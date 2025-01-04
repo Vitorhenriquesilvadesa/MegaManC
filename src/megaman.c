@@ -85,8 +85,10 @@ Megaman *newMegaman(vec2s position)
     setAnimation(&megaman->entity, megamanResources.normalAnimations[megaman->state], PLAY_FROM_BEGIN, false);
 
     TriggerAPI *triggers = (TriggerAPI *)getGameInstanceService(SERVICE_TYPE_EVENT);
-    registerTrigger(triggers, onMegamanJumpTrigger, onMegamanJump, megaman);
     registerTrigger(triggers, onMegamanShootTrigger, onMegamanShoot, megaman);
+    registerTrigger(triggers, onMegamanCeilTrigger, onMegamanCeil, megaman);
+    registerTrigger(triggers, onMegamanLandTrigger, onMegamanLand, megaman);
+    registerTrigger(triggers, onMegamanJumpTrigger, onMegamanJump, megaman);
 
     return megaman;
 }
@@ -121,17 +123,6 @@ void onUpdateMegaman(void *self, float dt)
     {
         megaman->shootTime -= dt;
         setAnimation(&megaman->entity, megamanResources.shootingAnimations[megaman->state], PLAY_FROM_CURRENT_FRAME, true);
-    }
-
-    if (isKeyPressed(GLFW_KEY_X) && !shoot)
-    {
-        megaman->shootTime = 0.3f;
-        shoot = true;
-    }
-
-    if (!isKeyPressed(GLFW_KEY_X))
-    {
-        shoot = false;
     }
 
     if (isKeyPressed(GLFW_KEY_LEFT))
@@ -172,31 +163,6 @@ void onUpdateMegaman(void *self, float dt)
     if (megaman->speed.y < -megaman->maxFallSpeed)
     {
         megaman->speed.y = -megaman->maxFallSpeed;
-    }
-
-    static bool floorSet = false;
-    static bool ceilSet = false;
-
-    if (megaman->isOnFloor && !floorSet)
-    {
-        floorSet = true;
-        megaman->speed.y = 0.0f;
-    }
-
-    if (megaman->isOnCeil && !ceilSet)
-    {
-        ceilSet = true;
-        megaman->speed.y = 0.0f;
-    }
-
-    if (!megaman->isOnFloor)
-    {
-        floorSet = false;
-    }
-
-    if (!megaman->isOnCeil)
-    {
-        ceilSet = false;
     }
 
     if (!isKeyPressed(GLFW_KEY_LEFT) && !isKeyPressed(GLFW_KEY_RIGHT))
@@ -378,6 +344,11 @@ bool onMegamanJumpTrigger(void *self)
     return zPressed && megaman->isOnFloor && !megaman->jumpTriggered;
 }
 
+bool onMegamanLandTrigger(void *self)
+{
+    return isOnFloor(AS_ENTITY_PTR(self));
+}
+
 void onMegamanShoot(void *self)
 {
     Megaman *megaman = (Megaman *)self;
@@ -389,4 +360,22 @@ void onMegamanJump(void *self)
     Megaman *megaman = (Megaman *)self;
     megaman->speed.y = megaman->jumpStrength;
     megaman->jumpTriggered = true;
+}
+
+void onMegamanLand(void *self)
+{
+    Megaman *megaman = (Megaman *)self;
+    megaman->speed.y = 0.0f;
+    megaman->isOnFloor = true;
+}
+
+bool onMegamanCeilTrigger(void *self)
+{
+    return isOnCeil(AS_ENTITY_PTR(self));
+}
+
+void onMegamanCeil(void *self)
+{
+    Megaman *megaman = (Megaman *)self;
+    megaman->speed.y = 0.0f;
 }

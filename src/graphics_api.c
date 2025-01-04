@@ -55,7 +55,11 @@ void initGraphicsAPI(void *self)
     Shader *spriteShader = newShader("../assets/shaders/default.vert",
                                      "../assets/shaders/default.frag");
 
+    Shader *tilemapShader = newShader("../assets/shaders/tilemap.vert",
+                                      "../assets/shaders/tilemap.frag");
+
     api->shaders[SHADER_TYPE_SPRITE] = spriteShader;
+    api->shaders[SHADER_TYPE_TILEMAP] = tilemapShader;
 }
 
 void updateGraphicsAPI(void *self, float dt)

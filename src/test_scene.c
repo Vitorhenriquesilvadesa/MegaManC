@@ -9,20 +9,20 @@ Scene *getTestScene()
     Scene *scene = newScene();
 
     int bricks[14][16] = {
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1},
-        {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53},
+        {25, 26, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 40},
+        {25, 26, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 40},
+        {25, 26, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 40},
+        {25, 26, 52, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 40},
+        {25, 26, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 40},
+        {25, 26, 00, 00, 00, 00, 16, 17, 18, 19, 20, 00, 00, 00, 00, 40},
+        {25, 26, 16, 20, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 40},
+        {25, 26, 25, 26, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 40},
+        {25, 26, 25, 26, 00, 00, 00, 00, 00, 00, 00, 16, 17, 19, 20, 40},
+        {25, 26, 16, 17, 18, 18, 18, 18, 18, 19, 20, 53, 53, 53, 53, 40},
+        {33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33},
+        {41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41},
+        {53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53},
     };
 
     for (int i = 0; i < 14; i++)
@@ -31,7 +31,7 @@ Scene *getTestScene()
         {
             if (bricks[i][j])
             {
-                addBrickToScene(scene, newBrick((vec2s){j * 16 - 128, i * 16 - 112}));
+                addTileToScene(scene, newBrick((vec2s){j * 16 - 128, i * 16 - 112}, bricks[i][j]));
             }
         }
     }
@@ -43,22 +43,18 @@ Scene *getTestScene()
     return scene;
 }
 
-Entity *newBrick(vec2s position)
+Tile newBrick(vec2s position, int id)
 {
-    static SpriteRenderer *renderer = NULL;
+    static TilemapAtlas *atlas = NULL;
 
-    if (!renderer)
+    if (!atlas)
     {
-        GraphicsAPI *graphics = (GraphicsAPI *)getGameInstanceService(SERVICE_TYPE_GRAPHICS);
-        Shader *shader = getShader(graphics, SHADER_TYPE_SPRITE);
-        Texture *brick = newTextureFromImage("../assets/tilemap/brick_tile.png");
-        Animation *animation = newAnimation(1, 1, brick, false, PLAY_FROM_BEGIN);
-        renderer = newSpriteRenderer(shader, animation);
+        atlas = newTilemapAtlasFromImage("../assets/tilemap/tilemap_001.png", (vec2s){16.0f, 16.0f});
     }
 
-    Entity *entity = newEntity(ENTITY_TYPE_BRICK, onUpdateBrick, onCollisionBrick, (vec2s){position.x + 8, position.y + 8},
-                               TILE_SIZE, (vec2s){0.0f, 0.0f}, TILE_SIZE, true, false, renderer);
-    return entity;
+    Tile tile = getTileFromAtlas(atlas, id, position);
+
+    return tile;
 }
 
 Entity *newCollider(vec2s position, vec2s size)
@@ -71,7 +67,7 @@ Entity *newCollider(vec2s position, vec2s size)
 
         Shader *shader = getShader(graphics, SHADER_TYPE_SPRITE);
         Texture *texture = newTextureFromImage("../assets/sprites/null/null.png");
-        Animation *animation = newAnimation(1, 1, texture, false, PLAY_FROM_BEGIN);
+        Animation *animation = newAnimation(01, 01, texture, false, PLAY_FROM_BEGIN);
         renderer = newSpriteRenderer(shader, animation);
     }
 
@@ -110,12 +106,12 @@ void generateColliders(Scene *scene, int bricks[14][16], int rows, int cols)
     {
         for (int j = 0; j < cols; j++)
         {
-            if (bricks[i][j] == 1 && !visited[i][j])
+            if (bricks[i][j] >= 1 && !visited[i][j])
             {
                 int startX = j, startY = i;
 
                 int endX = startX;
-                while (endX + 1 < cols && bricks[i][endX + 1] == 1 && !visited[i][endX + 1])
+                while (endX + 1 < cols && bricks[i][endX + 1] >= 1 && !visited[i][endX + 1])
                 {
                     endX++;
                 }
@@ -126,7 +122,7 @@ void generateColliders(Scene *scene, int bricks[14][16], int rows, int cols)
                 {
                     for (int x = startX; x <= endX; x++)
                     {
-                        if (bricks[endY + 1][x] != 1 || visited[endY + 1][x])
+                        if (!(bricks[endY + 1][x]) || visited[endY + 1][x])
                         {
                             validColumn = false;
                             break;

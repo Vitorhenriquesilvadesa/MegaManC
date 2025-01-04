@@ -2,6 +2,8 @@
 #include <allocator.h>
 #include <mesh.h>
 #include <sprite.h>
+#include <graphics_api.h>
+#include <game.h>
 
 static Mesh *quad = NULL;
 
@@ -83,13 +85,13 @@ Renderer2D *newRenderer()
 void render(Renderer2D *renderer, Scene *scene)
 {
     Entity **entities = scene->entities;
-    Entity **tilemap = scene->tilemap;
+    Tile *tilemap = scene->tilemap;
 
-    for (uint32_t i = 0; i < scene->brickCount; i++)
+    for (uint32_t i = 0; i < scene->tileCount; i++)
     {
-        if (isEntityOnScreen(tilemap[i], renderer->camera))
+        if (isTileOnScreen(tilemap[i], renderer->camera))
         {
-            renderEntity(tilemap[i], renderer->camera);
+            renderTile(tilemap[i], renderer->camera);
         }
         // renderWireframe(entities[i], renderer->camera);
         // renderCollider(entities[i], renderer->camera);
@@ -97,7 +99,7 @@ void render(Renderer2D *renderer, Scene *scene)
 
     for (uint32_t i = 0; i < scene->entityCount; i++)
     {
-        renderCollider(entities[i], renderer->camera);
+        // renderCollider(entities[i], renderer->camera);
 
         if (!entities[i]->isVisible)
         {
@@ -219,6 +221,43 @@ void renderLine(Renderer2D *renderer, Line line)
     transformation = glms_scale(transformation, (vec3s){length, 1.0f, 1.0f});
 
     shaderSetMat4(lineShader, "model", transformation);
+
+    bindMesh(quad);
+    drawMesh(quad);
+
+    unbindTextures();
+    unbindMeshes();
+    unbindShaders();
+}
+
+void renderTile(Tile tile, Camera2D *camera)
+{
+    static Shader *shader = NULL;
+
+    if (!shader)
+    {
+        GraphicsAPI *graphics = (GraphicsAPI *)getGameInstanceService(SERVICE_TYPE_GRAPHICS);
+        shader = getShader(graphics, SHADER_TYPE_TILEMAP);
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    bindTexture(tile.atlas->atlas);
+    bindShader(shader);
+
+    shaderSetInt(shader, "atlasColumns", tile.atlas->columnCount);
+    shaderSetInt(shader, "atlasRows", tile.atlas->rowCount);
+    shaderSetInt(shader, "id", tile.id);
+
+    shaderSetMat4(shader, "projection", cameraGetProjectionMatrix(camera));
+    shaderSetMat4(shader, "view", cameraGetViewMatrix(camera));
+
+    mat4s transformation = GLMS_MAT4_IDENTITY_INIT;
+    transformation = glms_translate(transformation, (vec3s){tile.position.x + tile.size.x / 2.0f, tile.position.y + tile.size.y / 2.0f, 0.0f});
+    transformation = glms_scale(transformation, (vec3s){tile.size.x, tile.size.y, 1.0f});
+
+    shaderSetMat4(shader, "model", transformation);
+
+    shaderSetInt(shader, "albedo", 0);
 
     bindMesh(quad);
     drawMesh(quad);

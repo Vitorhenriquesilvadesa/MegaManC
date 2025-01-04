@@ -51,6 +51,7 @@ void registerTrigger(TriggerAPI *api, TriggerCondition condition, TriggerCallbac
     trigger->condition = condition;
     trigger->action = action;
     trigger->context = context;
+    trigger->status = TRIGGER_STATUS_WAITING;
 
     if (api->triggerCount >= api->capacity - 1)
     {

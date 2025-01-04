@@ -10,7 +10,7 @@
 
 #define CAST_ENTITY(type, value) type *entity = (type *)value
 
-#define AS_ENTITY_PTR(value) (Entity *)value
+#define AS_ENTITY_PTR(value) ((Entity *)value)
 
 typedef struct Camera2D Camera2D;
 

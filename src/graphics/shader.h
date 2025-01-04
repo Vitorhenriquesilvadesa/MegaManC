@@ -16,6 +16,7 @@ typedef struct
 typedef enum
 {
     SHADER_TYPE_SPRITE,
+    SHADER_TYPE_TILEMAP,
     SHADER_TYPE_MAX,
 } ShaderType;
 

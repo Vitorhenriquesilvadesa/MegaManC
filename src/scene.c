@@ -7,9 +7,9 @@ Scene *newScene()
     scene->entities = ALLOCATE(Entity *, ARRAY_MIN_SIZE);
     scene->entityCapacity = ARRAY_MIN_SIZE;
     scene->entityCount = 0;
-    scene->tilemap = ALLOCATE(Entity *, ARRAY_MIN_SIZE);
-    scene->brickCapacity = ARRAY_MIN_SIZE;
-    scene->brickCount = 0;
+    scene->tilemap = ALLOCATE(Tile, ARRAY_MIN_SIZE);
+    scene->tileCapacity = ARRAY_MIN_SIZE;
+    scene->tileCount = 0;
 }
 
 void addObjectToScene(Scene *scene, Entity *entity)
@@ -24,14 +24,14 @@ void addObjectToScene(Scene *scene, Entity *entity)
     scene->entities[scene->entityCount++] = entity;
 }
 
-void addBrickToScene(Scene *scene, Entity *entity)
+void addTileToScene(Scene *scene, Tile tile)
 {
-    if (scene->brickCount >= scene->brickCapacity - 1)
+    if (scene->tileCount >= scene->tileCapacity - 1)
     {
-        uint32_t newCapacity = scene->brickCapacity * ARRAY_GROW_FACTOR;
-        scene->tilemap = REALLOCATE(Entity *, scene->tilemap, newCapacity);
-        scene->brickCapacity = newCapacity;
+        uint32_t newCapacity = scene->tileCapacity * ARRAY_GROW_FACTOR;
+        scene->tilemap = REALLOCATE(Tile, scene->tilemap, newCapacity);
+        scene->tileCapacity = newCapacity;
     }
 
-    scene->tilemap[scene->brickCount++] = entity;
+    scene->tilemap[scene->tileCount++] = tile;
 }

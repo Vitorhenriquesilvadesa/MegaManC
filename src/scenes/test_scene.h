@@ -4,7 +4,7 @@
 #include <scene.h>
 
 Scene *getTestScene();
-Entity *newBrick(vec2s position);
+Tile newBrick(vec2s position, int id);
 Entity *newCollider(vec2s position, vec2s size);
 void onUpdateBrick(void *self, float dt);
 void onUpdateNull(void *self, float dt);
