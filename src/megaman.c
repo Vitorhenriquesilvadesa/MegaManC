@@ -3,14 +3,15 @@
 #include <game.h>
 #include <object_pool_api.h>
 #include <graphics_api.h>
+#include <trigger.h>
 #include <allocator.h>
 #include <ray_cast.h>
 #include <GLFW/glfw3.h>
 
 #define MEGAMAN_MAX_SPEED 90.0f
-#define MEGAMAN_AIR_MAX_FALL_SPEED 400.0f
+#define MEGAMAN_AIR_MAX_FALL_SPEED 300.0f
 #define MEGAMAN_AIR_JUMP_STRENGTH 345.0f
-#define MEGAMAN_GRAVITY 900.0f
+#define MEGAMAN_GRAVITY 1000.0f
 
 static MegamanResources megamanResources = {};
 
@@ -68,7 +69,7 @@ Megaman *newMegaman(vec2s position)
     Entity entity;
 
     initEntity(&entity, ENTITY_TYPE_MEGAMAN, onUpdateMegaman, onCollisionMegaman, position, MEGAMAN_SIZE,
-               (vec2s){10.0f, 3.0f}, (vec2s){20.0f, 26.0f}, false, true, renderer);
+               (vec2s){8.0f, 3.0f}, (vec2s){22.0f, 26.0f}, false, true, renderer);
 
     Megaman *megaman = ALLOCATE(Megaman, 1);
     megaman->entity = entity;
@@ -79,8 +80,13 @@ Megaman *newMegaman(vec2s position)
     megaman->jumpStrength = MEGAMAN_AIR_JUMP_STRENGTH;
     megaman->state = MEGAMAN_STATE_IDLE;
     megaman->speed = (vec2s){0.0f, 0.0f};
+    megaman->jumpTriggered = false;
 
     setAnimation(&megaman->entity, megamanResources.normalAnimations[megaman->state], PLAY_FROM_BEGIN, false);
+
+    TriggerAPI *triggers = (TriggerAPI *)getGameInstanceService(SERVICE_TYPE_EVENT);
+    registerTrigger(triggers, onMegamanJumpTrigger, onMegamanJump, megaman);
+    registerTrigger(triggers, onMegamanShootTrigger, onMegamanShoot, megaman);
 
     return megaman;
 }
@@ -198,32 +204,12 @@ void onUpdateMegaman(void *self, float dt)
         megaman->speed.x = 0.0f;
     }
 
-    static bool jumped = false;
-
-    if (isKeyPressed(GLFW_KEY_Z) && megaman->isOnFloor && !jumped)
-    {
-        jumped = true;
-        megaman->speed.y = megaman->jumpStrength;
-    }
-
-    if (!isKeyPressed(GLFW_KEY_Z))
-    {
-        jumped = false;
-    }
-
-    if (megaman->speed.x > 0.0f && !megaman->isRightWall)
-    {
-        megaman->entity.transform.position.x += megaman->speed.x * dt;
-    }
-
-    if (megaman->speed.x < 0.0f && !megaman->isLeftWall)
+    if (megaman->speed.x > 0.0f && !megaman->isRightWall || megaman->speed.x < 0.0f && !megaman->isLeftWall)
     {
         megaman->entity.transform.position.x += megaman->speed.x * dt;
     }
 
     megaman->entity.transform.position.y -= megaman->speed.y * dt;
-
-    graphics->renderer->camera->position.x = megaman->entity.transform.position.x;
 }
 
 static bool isOnRightWall(Entity *entity)
@@ -370,4 +356,37 @@ static bool isOnCeil(Entity *entity)
 
 void onCollisionMegaman(void *self, AABBColisionData data)
 {
+}
+
+bool onMegamanShootTrigger(void *self)
+{
+    Megaman *megaman = (Megaman *)self;
+    return isKeyPressed(GLFW_KEY_X);
+}
+
+bool onMegamanJumpTrigger(void *self)
+{
+    Megaman *megaman = (Megaman *)self;
+
+    bool zPressed = isKeyPressed(GLFW_KEY_Z);
+
+    if (!zPressed && megaman->isOnFloor)
+    {
+        megaman->jumpTriggered = false;
+    }
+
+    return zPressed && megaman->isOnFloor && !megaman->jumpTriggered;
+}
+
+void onMegamanShoot(void *self)
+{
+    Megaman *megaman = (Megaman *)self;
+    megaman->shootTime = 0.3f;
+}
+
+void onMegamanJump(void *self)
+{
+    Megaman *megaman = (Megaman *)self;
+    megaman->speed.y = megaman->jumpStrength;
+    megaman->jumpTriggered = true;
 }

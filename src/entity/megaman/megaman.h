@@ -34,11 +34,17 @@ typedef struct
     bool isLeftWall;
     bool isRightWall;
     bool isOnCeil;
+    bool jumpTriggered;
 } Megaman;
 
 Megaman *newMegaman(vec2s position);
 
 void onUpdateMegaman(void *self, float dt);
 void onCollisionMegaman(void *self, AABBColisionData data);
+
+bool onMegamanShootTrigger(void *self);
+bool onMegamanJumpTrigger(void *self);
+void onMegamanShoot(void *self);
+void onMegamanJump(void *self);
 
 #endif

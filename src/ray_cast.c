@@ -69,7 +69,7 @@ bool raycastHit(Ray ray, float distance)
     GraphicsAPI *graphics = (GraphicsAPI *)getGameInstanceService(SERVICE_TYPE_GRAPHICS);
     Renderer2D *renderer = graphics->renderer;
 
-    drawLine(renderer, ray, distance);
+    // drawLine(renderer, ray, distance);
 
     Scene *scene = getGameInstanceActiveScene();
 
@@ -77,8 +77,6 @@ bool raycastHit(Ray ray, float distance)
     {
         return false;
     }
-
-    uint32_t count = 0;
 
     for (uint32_t i = 0; i < scene->entityCount; i++)
     {

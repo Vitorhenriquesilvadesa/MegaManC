@@ -30,6 +30,7 @@ void registerService(Game *game, Service *service);
 void registerServices(Game *game);
 void registerGraphicsAPI(Game *game);
 void registerObjectPoolAPI(Game *game);
+void registerEventAPI(Game *game);
 void initServices(Game *game);
 void setGameInstance(Game *game);
 void setGameInstanceFlag(GameFlag flag, FlagFunction function);

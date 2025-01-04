@@ -3,6 +3,7 @@
 #include <allocator.h>
 #include <graphics_api.h>
 #include <object_pool_api.h>
+#include <trigger.h>
 #include <stdio.h>
 #include <animation.h>
 #include <test_scene.h>
@@ -32,7 +33,7 @@ void gameLoop(Game *game)
 
     bool lockFPS = false;
 
-    const float MAX_DELTA_TIME = 0.1f;
+    const float MAX_DELTA_TIME = 0.05f;
 
     while (!getGameInstanceFlag(FLAG_WINDOW_CLOSED, SERVICE_TYPE_GRAPHICS))
     {
@@ -116,6 +117,7 @@ void registerServices(Game *game)
 {
     registerGraphicsAPI(game);
     registerObjectPoolAPI(game);
+    registerEventAPI(game);
 }
 
 void registerGraphicsAPI(Game *game)
@@ -131,6 +133,12 @@ void registerObjectPoolAPI(Game *game)
 {
     ObjectPoolAPI *pool = newObjectPoolAPI();
     registerService(game, AS_SERVICE_PTR(pool));
+}
+
+void registerEventAPI(Game *game)
+{
+    TriggerAPI *triggers = newTriggerAPI();
+    registerService(game, AS_SERVICE_PTR(triggers));
 }
 
 void initServices(Game *game)
