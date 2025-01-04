@@ -3,4 +3,6 @@
 
 #include <stdbool.h>
 
+#define BIT(x) (1 << x)
+
 #endif

@@ -6,6 +6,7 @@
 
 #include <sprite.h>
 #include <aabb.h>
+#include <types.h>
 
 #define CAST_ENTITY(type, value) type *entity = (type *)value
 
@@ -18,9 +19,9 @@ typedef void (*EntityCollisionFn)(void *self, AABBColisionData data);
 
 typedef enum
 {
-    ENTITY_TYPE_MEGAMAN,
-    ENTITY_TYPE_BRICK,
-    ENTITY_TYPE_COLLIDER,
+    ENTITY_TYPE_MEGAMAN = BIT(0),
+    ENTITY_TYPE_BRICK = BIT(1),
+    ENTITY_TYPE_COLLIDER = BIT(2),
 } EntityType;
 
 typedef struct
@@ -31,7 +32,7 @@ typedef struct
 
 typedef struct Entity
 {
-    EntityType type;
+    uint32_t type;
     EntityUpdateFn onUpdate;
     EntityCollisionFn onCollision;
     Transform transform;
@@ -42,8 +43,8 @@ typedef struct Entity
     AABB collider;
 } Entity;
 
-Entity *newEntity(EntityType type, EntityUpdateFn onUpdate, EntityCollisionFn onCollision, vec2s position, vec2s scale, vec2s aabbMin, vec2s aabbMax, bool isSolid, bool isVisible, SpriteRenderer *renderer);
-void initEntity(Entity *entity, EntityType type, EntityUpdateFn onUpdate, EntityCollisionFn onCollision, vec2s position, vec2s scale, vec2s aabbMin, vec2s aabbMax, bool isSolid, bool isVisible, SpriteRenderer *renderer);
+Entity *newEntity(uint32_t type, EntityUpdateFn onUpdate, EntityCollisionFn onCollision, vec2s position, vec2s scale, vec2s aabbMin, vec2s aabbMax, bool isSolid, bool isVisible, SpriteRenderer *renderer);
+void initEntity(Entity *entity, uint32_t type, EntityUpdateFn onUpdate, EntityCollisionFn onCollision, vec2s position, vec2s scale, vec2s aabbMin, vec2s aabbMax, bool isSolid, bool isVisible, SpriteRenderer *renderer);
 mat4s entityGetTransformationMatrix(Entity *entity);
 
 void updateEntity(Entity *entity, float dt);

@@ -56,8 +56,8 @@ void updateScene(Scene *scene, float dt)
             }
 
             if (i == j ||
-                (entities[i]->type == ENTITY_TYPE_BRICK && entities[j]->type == ENTITY_TYPE_BRICK) ||
-                (entities[i]->type == ENTITY_TYPE_BRICK))
+                ((entities[i]->type & ENTITY_TYPE_BRICK) && (entities[j]->type & ENTITY_TYPE_BRICK)) ||
+                (entities[i]->type & ENTITY_TYPE_BRICK))
             {
                 continue;
             }

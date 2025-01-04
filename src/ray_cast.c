@@ -81,7 +81,7 @@ bool raycastHit(Ray ray, float distance)
     for (uint32_t i = 0; i < scene->entityCount; i++)
     {
         Entity *entity = scene->entities[i];
-        if (!entity || entity->type != ENTITY_TYPE_BRICK && entity->type != ENTITY_TYPE_COLLIDER)
+        if (!entity || !(entity->type & (ENTITY_TYPE_BRICK | ENTITY_TYPE_COLLIDER)))
             continue;
 
         if (rayIntersectsAABB(ray.origin, ray.direction, entity, distance))

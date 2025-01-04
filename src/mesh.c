@@ -61,6 +61,7 @@ void drawMesh(Mesh *mesh)
 
 void drawMeshWireframe(Mesh *mesh)
 {
+    glLineWidth(2.5f);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDrawElements(GL_TRIANGLES, mesh->count, GL_UNSIGNED_INT, NULL);
 }
