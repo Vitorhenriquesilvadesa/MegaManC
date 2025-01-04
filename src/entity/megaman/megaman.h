@@ -3,17 +3,19 @@
 
 #include <entity.h>
 
-typedef struct
-{
-    Animation *idle;
-    Animation *walk;
-    Animation *jump;
-} MegamanResources;
-
 typedef enum
 {
     MEGAMAN_STATE_IDLE,
+    MEGAMAN_STATE_WALK,
+    MEGAMAN_STATE_JUMP,
+    MEGAMAN_STATE_MAX,
 } MegamanState;
+
+typedef struct
+{
+    Animation **normalAnimations;
+    Animation **shootingAnimations;
+} MegamanResources;
 
 typedef struct
 {
@@ -24,6 +26,7 @@ typedef struct
     float maxSpeed;
     float maxFallSpeed;
     float jumpStrength;
+    float shootTime;
     bool isJumping;
     bool isFalling;
     bool isMoving;

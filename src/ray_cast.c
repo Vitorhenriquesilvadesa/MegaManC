@@ -69,17 +69,21 @@ bool raycastHit(Ray ray, float distance)
     GraphicsAPI *graphics = (GraphicsAPI *)getGameInstanceService(SERVICE_TYPE_GRAPHICS);
     Renderer2D *renderer = graphics->renderer;
 
-    // drawLine(renderer, ray, distance);
+    drawLine(renderer, ray, distance);
 
     Scene *scene = getGameInstanceActiveScene();
 
     if (!scene)
+    {
         return false;
+    }
+
+    uint32_t count = 0;
 
     for (uint32_t i = 0; i < scene->entityCount; i++)
     {
         Entity *entity = scene->entities[i];
-        if (!entity || entity->type != ENTITY_TYPE_BRICK)
+        if (!entity || entity->type != ENTITY_TYPE_BRICK && entity->type != ENTITY_TYPE_COLLIDER)
             continue;
 
         if (rayIntersectsAABB(ray.origin, ray.direction, entity, distance))

@@ -20,7 +20,7 @@ void gameLoop(Game *game)
 {
     updateGame(game);
 
-    float fps = 144.0f;
+    float fps = 60.0f;
 
     float frameTime = 1.0f / fps;
 
@@ -32,11 +32,18 @@ void gameLoop(Game *game)
 
     bool lockFPS = false;
 
+    const float MAX_DELTA_TIME = 0.1f;
+
     while (!getGameInstanceFlag(FLAG_WINDOW_CLOSED, SERVICE_TYPE_GRAPHICS))
     {
         float currentTime = glfwGetTime();
         float deltaTime = currentTime - lastTime;
         lastTime = currentTime;
+
+        if (deltaTime > MAX_DELTA_TIME)
+        {
+            deltaTime = MAX_DELTA_TIME;
+        }
 
         accumulatedTime += deltaTime;
 

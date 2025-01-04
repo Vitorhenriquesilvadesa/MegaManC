@@ -12,26 +12,41 @@
 #define MEGAMAN_AIR_JUMP_STRENGTH 345.0f
 #define MEGAMAN_GRAVITY 900.0f
 
-static MegamanResources megamanResources = {NULL, NULL, NULL};
+static MegamanResources megamanResources = {};
 
 static void createAnimations()
 {
-    if (!megamanResources.walk)
+    megamanResources.normalAnimations = ALLOCATE(Animation *, MEGAMAN_STATE_MAX);
+    megamanResources.shootingAnimations = ALLOCATE(Animation *, MEGAMAN_STATE_MAX);
+
     {
         Texture *texture = newTextureFromImage("../assets/sprites/megaman/walk.png");
-        megamanResources.walk = newAnimation(4, 10, texture, true, PLAY_FROM_BEGIN);
+        megamanResources.normalAnimations[MEGAMAN_STATE_WALK] = newAnimation(4, 10, texture, true, PLAY_FROM_BEGIN);
     }
 
-    if (!megamanResources.jump)
     {
         Texture *texture = newTextureFromImage("../assets/sprites/megaman/jump.png");
-        megamanResources.jump = newAnimation(1, 1, texture, false, PLAY_FROM_BEGIN);
+        megamanResources.normalAnimations[MEGAMAN_STATE_JUMP] = newAnimation(1, 1, texture, false, PLAY_FROM_BEGIN);
     }
 
-    if (!megamanResources.idle)
     {
         Texture *texture = newTextureFromImage("../assets/sprites/megaman/idle.png");
-        megamanResources.idle = newAnimation(15, 10, texture, true, PLAY_FROM_BEGIN);
+        megamanResources.normalAnimations[MEGAMAN_STATE_IDLE] = newAnimation(15, 10, texture, true, PLAY_FROM_BEGIN);
+    }
+
+    {
+        Texture *texture = newTextureFromImage("../assets/sprites/megaman/walk_shoot.png");
+        megamanResources.shootingAnimations[MEGAMAN_STATE_WALK] = newAnimation(4, 10, texture, true, PLAY_FROM_BEGIN);
+    }
+
+    {
+        Texture *texture = newTextureFromImage("../assets/sprites/megaman/jump_shoot.png");
+        megamanResources.shootingAnimations[MEGAMAN_STATE_JUMP] = newAnimation(1, 1, texture, false, PLAY_FROM_BEGIN);
+    }
+
+    {
+        Texture *texture = newTextureFromImage("../assets/sprites/megaman/idle_shoot.png");
+        megamanResources.shootingAnimations[MEGAMAN_STATE_IDLE] = newAnimation(1, 1, texture, true, PLAY_FROM_BEGIN);
     }
 }
 
@@ -41,21 +56,31 @@ Megaman *newMegaman(vec2s position)
 
     Shader *shader = getShader(graphics, SHADER_TYPE_SPRITE);
 
-    createAnimations();
+    static bool animationsCreated = false;
 
-    SpriteRenderer *renderer = newSpriteRenderer(shader, megamanResources.idle);
+    if (!animationsCreated)
+    {
+        createAnimations();
+        animationsCreated = true;
+    }
+
+    SpriteRenderer *renderer = newSpriteRenderer(shader, megamanResources.normalAnimations[MEGAMAN_STATE_IDLE]);
     Entity entity;
 
     initEntity(&entity, ENTITY_TYPE_MEGAMAN, onUpdateMegaman, onCollisionMegaman, position, MEGAMAN_SIZE,
-               (vec2s){10.0f, 3.0f}, (vec2s){20.0f, 26.0f}, false, renderer);
+               (vec2s){10.0f, 3.0f}, (vec2s){20.0f, 26.0f}, false, true, renderer);
 
     Megaman *megaman = ALLOCATE(Megaman, 1);
     megaman->entity = entity;
+    megaman->shootTime = 0.0f;
     megaman->maxFallSpeed = MEGAMAN_AIR_MAX_FALL_SPEED;
     megaman->gravity = MEGAMAN_GRAVITY;
     megaman->maxSpeed = MEGAMAN_MAX_SPEED;
     megaman->jumpStrength = MEGAMAN_AIR_JUMP_STRENGTH;
+    megaman->state = MEGAMAN_STATE_IDLE;
     megaman->speed = (vec2s){0.0f, 0.0f};
+
+    setAnimation(&megaman->entity, megamanResources.normalAnimations[megaman->state], PLAY_FROM_BEGIN, false);
 
     return megaman;
 }
@@ -80,6 +105,29 @@ void onUpdateMegaman(void *self, float dt)
 
     megaman->isMoving = megaman->speed.x != 0.0f;
 
+    static bool shoot = false;
+
+    if (megaman->shootTime <= 0.0f)
+    {
+        setAnimation(&megaman->entity, megamanResources.normalAnimations[megaman->state], PLAY_FROM_BEGIN, false);
+    }
+    else
+    {
+        megaman->shootTime -= dt;
+        setAnimation(&megaman->entity, megamanResources.shootingAnimations[megaman->state], PLAY_FROM_CURRENT_FRAME, true);
+    }
+
+    if (isKeyPressed(GLFW_KEY_X) && !shoot)
+    {
+        megaman->shootTime = 0.3f;
+        shoot = true;
+    }
+
+    if (!isKeyPressed(GLFW_KEY_X))
+    {
+        shoot = false;
+    }
+
     if (isKeyPressed(GLFW_KEY_LEFT))
     {
         megaman->entity.isMirrored = true;
@@ -97,22 +145,27 @@ void onUpdateMegaman(void *self, float dt)
 
     if (megaman->isMoving && megaman->isOnFloor)
     {
-        setAnimation(&megaman->entity, megamanResources.walk, PLAY_FROM_BEGIN);
+        megaman->state = MEGAMAN_STATE_WALK;
     }
 
     if (!megaman->isMoving && megaman->isOnFloor)
     {
-        setAnimation(&megaman->entity, megamanResources.idle, PLAY_FROM_BEGIN);
+        megaman->state = MEGAMAN_STATE_IDLE;
     }
 
     if (!megaman->isOnFloor)
     {
-        setAnimation(&megaman->entity, megamanResources.jump, PLAY_FROM_BEGIN);
+        megaman->state = MEGAMAN_STATE_JUMP;
     }
 
-    if (!megaman->isOnFloor)
+    if (!megaman->isOnFloor && megaman->speed.y > -megaman->maxFallSpeed)
     {
         megaman->speed.y -= megaman->gravity * dt;
+    }
+
+    if (megaman->speed.y < -megaman->maxFallSpeed)
+    {
+        megaman->speed.y = -megaman->maxFallSpeed;
     }
 
     static bool floorSet = false;

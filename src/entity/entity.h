@@ -20,6 +20,7 @@ typedef enum
 {
     ENTITY_TYPE_MEGAMAN,
     ENTITY_TYPE_BRICK,
+    ENTITY_TYPE_COLLIDER,
 } EntityType;
 
 typedef struct
@@ -36,17 +37,18 @@ typedef struct Entity
     Transform transform;
     bool isMirrored;
     bool isSolid;
+    bool isVisible;
     SpriteRenderer *renderer;
     AABB collider;
 } Entity;
 
-Entity *newEntity(EntityType type, EntityUpdateFn onUpdate, EntityCollisionFn onCollision, vec2s position, vec2s scale, vec2s aabbMin, vec2s aabbMax, bool isSolid, SpriteRenderer *renderer);
-void initEntity(Entity *entity, EntityType type, EntityUpdateFn onUpdate, EntityCollisionFn onCollision, vec2s position, vec2s scale, vec2s aabbMin, vec2s aabbMax, bool isSolid, SpriteRenderer *renderer);
+Entity *newEntity(EntityType type, EntityUpdateFn onUpdate, EntityCollisionFn onCollision, vec2s position, vec2s scale, vec2s aabbMin, vec2s aabbMax, bool isSolid, bool isVisible, SpriteRenderer *renderer);
+void initEntity(Entity *entity, EntityType type, EntityUpdateFn onUpdate, EntityCollisionFn onCollision, vec2s position, vec2s scale, vec2s aabbMin, vec2s aabbMax, bool isSolid, bool isVisible, SpriteRenderer *renderer);
 mat4s entityGetTransformationMatrix(Entity *entity);
 
 void updateEntity(Entity *entity, float dt);
 void freeEntity(Entity *entity);
 bool isEntityOnScreen(Entity *entity, struct Camera2D *camera);
-void setAnimation(Entity *entity, Animation *animation, AnimationPlay play);
+void setAnimation(Entity *entity, Animation *animation, AnimationPlay play, bool captureFrameTime);
 
 #endif

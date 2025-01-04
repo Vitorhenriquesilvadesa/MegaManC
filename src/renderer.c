@@ -83,15 +83,33 @@ Renderer2D *newRenderer()
 void render(Renderer2D *renderer, Scene *scene)
 {
     Entity **entities = scene->entities;
+    Entity **tilemap = scene->tilemap;
+
+    for (uint32_t i = 0; i < scene->brickCount; i++)
+    {
+        if (isEntityOnScreen(tilemap[i], renderer->camera))
+        {
+            renderEntity(tilemap[i], renderer->camera);
+        }
+        // renderWireframe(entities[i], renderer->camera);
+        // renderCollider(entities[i], renderer->camera);
+    }
 
     for (uint32_t i = 0; i < scene->entityCount; i++)
     {
+        renderCollider(entities[i], renderer->camera);
+
+        if (!entities[i]->isVisible)
+        {
+            continue;
+        }
+
         if (isEntityOnScreen(entities[i], renderer->camera))
         {
             renderEntity(entities[i], renderer->camera);
         }
+
         // renderWireframe(entities[i], renderer->camera);
-        // renderCollider(entities[i], renderer->camera);
     }
 
     for (size_t i = 0; i < renderer->lineCount; i++)

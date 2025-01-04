@@ -2,22 +2,17 @@
 #include <allocator.h>
 #include <renderer.h>
 
-Entity *newEntity(EntityType type, EntityUpdateFn onUpdate, EntityCollisionFn onCollision, vec2s position, vec2s scale, vec2s aabbMin, vec2s aabbMax, bool isSolid, SpriteRenderer *renderer)
+Entity *newEntity(EntityType type, EntityUpdateFn onUpdate, EntityCollisionFn onCollision, vec2s position, vec2s scale, vec2s aabbMin, vec2s aabbMax, bool isSolid, bool isVisible, SpriteRenderer *renderer)
 {
     Entity *entity = ALLOCATE(Entity, 1);
 
-    initEntity(entity, type, onUpdate, onCollision, position, scale, aabbMin, aabbMax, isSolid, renderer);
+    initEntity(entity, type, onUpdate, onCollision, position, scale, aabbMin, aabbMax, isSolid, isVisible, renderer);
 
     return entity;
 }
 
-void initEntity(Entity *entity, EntityType type, EntityUpdateFn onUpdate, EntityCollisionFn onCollision, vec2s position, vec2s scale, vec2s aabbMin, vec2s aabbMax, bool isSolid, SpriteRenderer *renderer)
+void initEntity(Entity *entity, EntityType type, EntityUpdateFn onUpdate, EntityCollisionFn onCollision, vec2s position, vec2s scale, vec2s aabbMin, vec2s aabbMax, bool isSolid, bool isVisible, SpriteRenderer *renderer)
 {
-    float minX = -scale.x / 2.0f;
-    float maxX = scale.x / 2.0f;
-    float minY = -scale.y / 2.0f;
-    float maxY = scale.y / 2.0f;
-
     AABB collider;
 
     vec2s aabbSize = (vec2s){aabbMax.x - aabbMin.x, aabbMax.y - aabbMin.y};
@@ -33,6 +28,7 @@ void initEntity(Entity *entity, EntityType type, EntityUpdateFn onUpdate, Entity
     entity->renderer = renderer;
     entity->isMirrored = false;
     entity->isSolid = isSolid;
+    entity->isVisible = isVisible;
 
     entity->collider = collider;
 }
@@ -82,7 +78,7 @@ bool isEntityOnScreen(Entity *entity, Camera2D *camera)
         pos.y < camPos.y + 128 + scale.y / 2.0f);
 }
 
-void setAnimation(Entity *entity, Animation *animation, AnimationPlay play)
+void setAnimation(Entity *entity, Animation *animation, AnimationPlay play, bool captureFrameTime)
 {
     if (animation == entity->renderer->currentAnimation)
     {
@@ -91,6 +87,11 @@ void setAnimation(Entity *entity, Animation *animation, AnimationPlay play)
 
     uint32_t frameCount = animation->frameCount;
     uint32_t currentFrame = entity->renderer->currentAnimation->currentFrame;
+
+    if (captureFrameTime)
+    {
+        animation->elapsedTime = 0.0f;
+    }
 
     if (currentFrame > frameCount || play == PLAY_FROM_BEGIN)
     {
