@@ -1,13 +1,10 @@
 #include <game.h>
 
-const int WIDTH = 800;
-const int HEIGHT = 600;
-
 int main(void)
 {
     Game game;
     setGameInstance(&game);
-    initGame(&game);
+    initGame(&game, 60.0f, 1.0f / 60.0f, true);
     gameLoop(&game);
     freeGame(&game);
 

@@ -17,4 +17,6 @@ typedef struct
 void initWindow(Window *window, vec2s size, const char *title, vec4s clearColor);
 void onWindowResize(GLFWwindow *window, int width, int height);
 
+void onWindowFocus(GLFWwindow *window, int focused);
+
 #endif

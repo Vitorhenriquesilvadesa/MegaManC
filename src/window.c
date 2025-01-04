@@ -1,6 +1,7 @@
 #include <window.h>
 #include <glad/glad.h>
 #include <sizes.h>
+#include <game.h>
 
 void initWindow(Window *window, vec2s size, const char *title, vec4s clearColor)
 {
@@ -26,4 +27,9 @@ void onWindowResize(GLFWwindow *window, int width, int height)
     }
 
     glViewport((width - newWidth) / 2, (height - newHeight) / 2, newWidth, newHeight);
+}
+
+void onWindowFocus(GLFWwindow *window, int focused)
+{
+    setGameEnableUpdates(focused);
 }

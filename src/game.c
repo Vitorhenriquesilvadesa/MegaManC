@@ -19,46 +19,38 @@ Service *getGameInstanceService(ServiceType type)
 
 void gameLoop(Game *game)
 {
-    updateGame(game);
-
-    float fps = 60.0f;
-
-    float frameTime = 1.0f / fps;
+    updateGame(game, true);
 
     float accumulatedTime = 0.0f;
-
-    float lastTime = glfwGetTime();
-
+    float lastTime = (float)glfwGetTime();
     game->lt = lastTime;
-
-    bool lockFPS = false;
-
-    const float MAX_DELTA_TIME = 0.05f;
 
     while (!getGameInstanceFlag(FLAG_WINDOW_CLOSED, SERVICE_TYPE_GRAPHICS))
     {
-        float currentTime = glfwGetTime();
+        float currentTime = (float)glfwGetTime();
         float deltaTime = currentTime - lastTime;
         lastTime = currentTime;
 
-        if (deltaTime > MAX_DELTA_TIME)
+        if (deltaTime > game->maxDeltaTime)
         {
-            deltaTime = MAX_DELTA_TIME;
+            deltaTime = game->maxDeltaTime;
         }
 
         accumulatedTime += deltaTime;
 
-        if (lockFPS)
+        if (game->lockFps)
         {
-            while (accumulatedTime >= frameTime)
+            bool canRender = accumulatedTime >= 1.0f / game->minFps;
+
+            if (canRender)
             {
-                updateGame(game);
-                accumulatedTime -= frameTime;
+                accumulatedTime = 0.0f;
             }
+            updateGame(game, canRender);
         }
         else
         {
-            updateGame(game);
+            updateGame(game, true);
         }
     }
 }
@@ -66,17 +58,28 @@ void gameLoop(Game *game)
 void calculateGameDeltaTime(Game *game)
 {
     float currentTime = (float)glfwGetTime();
-    game->dt = currentTime - game->lt;
+    float deltaTime = currentTime - game->lt;
     game->lt = currentTime;
+    game->enableUpdates = true;
+    game->dt = deltaTime;
+
+    if (game->dt > game->maxDeltaTime)
+    {
+        game->dt = game->maxDeltaTime;
+    }
 }
 
-void initGame(Game *game)
+void initGame(Game *game, float minFps, float maxDeltaTime, bool lockFps)
 {
     game->flags = ALLOCATE(FlagFunction, FLAG_MAX_COUNT);
     initServiceSet(&game->services);
     registerServices(game);
 
     game->isRunning = true;
+    game->minFps = minFps;
+    game->maxDeltaTime = maxDeltaTime;
+    game->lockFps = lockFps;
+    game->fixedDt = 1.0f / minFps;
 
     initServices(game);
 
@@ -86,15 +89,40 @@ void initGame(Game *game)
     api->scene = scene;
 }
 
-void updateGame(Game *game)
+void updateGame(Game *game, bool render)
 {
-    calculateGameDeltaTime(game);
-
-    for (size_t i = 0; i < SERVICE_TYPE_MAX; i++)
+    if (game->enableUpdates)
     {
-        Service *service = game->services.services[i];
-        service->update(service, game->dt);
+        calculateGameDeltaTime(game);
+
+        if (!game->lockFps)
+        {
+            while (game->dt >= game->fixedDt)
+            {
+                for (size_t i = 0; i < SERVICE_TYPE_MAX; i++)
+                {
+                    Service *service = game->services.services[i];
+                    if (service->type != SERVICE_TYPE_GRAPHICS)
+                    {
+                        service->update(service, game->fixedDt);
+                    }
+                }
+                game->dt -= game->fixedDt;
+            }
+        }
+
+        for (size_t i = 0; i < SERVICE_TYPE_MAX; i++)
+        {
+            Service *service = game->services.services[i];
+            if (service->type == SERVICE_TYPE_GRAPHICS && !render)
+            {
+                continue;
+            }
+            service->update(service, game->dt);
+        }
     }
+
+    glfwPollEvents();
 }
 
 void freeGame(Game *game)
@@ -175,6 +203,21 @@ Scene *getGameInstanceActiveScene()
 float getGameInstanceDeltaTime()
 {
     return instance->dt;
+}
+
+float getGameInstanceFixedDeltaTime()
+{
+    return instance->fixedDt;
+}
+
+float getGameInstanceFPS()
+{
+    return instance->minFps;
+}
+
+void setGameEnableUpdates(bool enable)
+{
+    instance->enableUpdates = enable;
 }
 
 bool isKeyPressed(uint32_t key)

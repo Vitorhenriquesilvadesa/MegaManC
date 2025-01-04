@@ -12,8 +12,13 @@ typedef struct
 {
     ServiceSet services;
     bool isRunning;
+    bool lockFps;
+    bool enableUpdates;
+    float maxDeltaTime;
+    float minFps;
     float dt;
     float lt;
+    float fixedDt;
     FlagFunction *flags;
     Scene *activeScene;
 } Game;
@@ -21,10 +26,13 @@ typedef struct
 Service *getGameInstanceService(ServiceType type);
 Scene *getGameInstanceActiveScene();
 float getGameInstanceDeltaTime();
+float getGameInstanceFixedDeltaTime();
+float getGameInstanceFPS();
+void setGameEnableUpdates(bool enable);
 void gameLoop(Game *game);
 void calculateGameDeltaTime(Game *game);
-void initGame(Game *game);
-void updateGame(Game *game);
+void initGame(Game *game, float minFps, float maxDeltaTime, bool lockFps);
+void updateGame(Game *game, bool render);
 void freeGame(Game *game);
 void registerService(Game *game, Service *service);
 void registerServices(Game *game);

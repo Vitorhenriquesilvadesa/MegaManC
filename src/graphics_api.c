@@ -64,9 +64,9 @@ void updateGraphicsAPI(void *self, float dt)
 
     static float elapsedTime = 0.0f;
 
-    elapsedTime += dt;
+    elapsedTime++;
 
-    if (elapsedTime >= 1.0f)
+    if (elapsedTime >= getGameInstanceFPS())
     {
         elapsedTime = 0.0f;
         char buffer[32];
@@ -81,7 +81,6 @@ void updateGraphicsAPI(void *self, float dt)
     render(api->renderer, getGameInstanceActiveScene());
 
     glfwSwapBuffers(api->window->nativeWindow);
-    glfwPollEvents();
 }
 
 void shutdownGraphicsAPI(void *self)
@@ -98,6 +97,7 @@ void shutdownGraphicsAPI(void *self)
 void setupCallbacks(GraphicsAPI *api)
 {
     glfwSetFramebufferSizeCallback(api->window->nativeWindow, onWindowResize);
+    glfwSetWindowFocusCallback(api->window->nativeWindow, onWindowFocus);
 }
 
 Shader *getShader(GraphicsAPI *graphics, ShaderType type)
