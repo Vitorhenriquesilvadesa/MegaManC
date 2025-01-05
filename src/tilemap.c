@@ -47,10 +47,10 @@ bool isTileOnScreen(Tile tile, vec2s tileSize, Camera2D *camera)
     vec2s scale = tileSize;
 
     return (
-        pos.x > camPos.x - 128 - scale.x / 2.0f &&
-        pos.x < camPos.x + 128 + scale.x / 2.0f &&
-        pos.y > camPos.y - 112 - scale.y / 2.0f &&
-        pos.y < camPos.y + 128 + scale.y / 2.0f);
+        pos.x > camPos.x - 128 - scale.x &&
+        pos.x < camPos.x + 128 + scale.x &&
+        pos.y > camPos.y - 112 - scale.y &&
+        pos.y < camPos.y + 128 + scale.y);
 }
 
 void generateColliders(Scene *scene, TilemapColliderMask *mask, int cols, int rows)
@@ -130,12 +130,23 @@ TilemapData *loadTilemapFromFiles(const char *tilemapFilepath, const char *scene
         return NULL;
     }
 
-    const char *imagePath = cJSON_GetObjectItem(tilemapRoot, "image")->valuestring;
+    cJSON *imageItem = cJSON_GetObjectItem(tilemapRoot, "image");
+    const char *imagePath = imageItem->valuestring;
+
+    char fullPath[512];
+    snprintf(fullPath, sizeof(fullPath), "../assets/%s", imagePath + 3);
+
     int tileWidth = cJSON_GetObjectItem(tilemapRoot, "tilewidth")->valueint;
     int tileHeight = cJSON_GetObjectItem(tilemapRoot, "tileheight")->valueint;
 
     vec2s tileSize = {tileWidth, tileHeight};
-    TilemapAtlas *atlas = newTilemapAtlasFromImage(imagePath, tileSize);
+    TilemapAtlas *atlas = newTilemapAtlasFromImage(fullPath, tileSize);
+    if (atlas == NULL)
+    {
+        printf("Error to load texture: %s\n", fullPath);
+        cJSON_Delete(tilemapRoot);
+        return NULL;
+    }
 
     cJSON_Delete(tilemapRoot);
 

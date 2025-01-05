@@ -1,5 +1,5 @@
 { "columns":8,
- "image":"../assets/tilemap/tilemap_001.png",
+ "image":"../tilemap/tilemap_001.png",
  "imageheight":112,
  "imagewidth":128,
  "margin":0,

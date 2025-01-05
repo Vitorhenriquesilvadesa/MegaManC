@@ -66,27 +66,41 @@ void updateGraphicsAPI(void *self, float dt)
 {
     CAST_API(GraphicsAPI, self);
 
-    static float elapsedTime = 0.0f;
+    static int elapsedTime = 0;
+    static float *values = NULL;
+    static int fpsCap = 0;
 
+    if (!values)
+    {
+        fpsCap = (int)getGameInstanceFPS();
+        values = ALLOCATE(float, fpsCap);
+    }
+
+    values[elapsedTime % fpsCap] = 1.0f / dt;
     elapsedTime++;
 
-    if (elapsedTime >= getGameInstanceFPS())
+    if (elapsedTime >= fpsCap)
     {
-        elapsedTime = 0.0f;
-        char buffer[32];
+        elapsedTime = 0;
+        float avg = 0.0f;
 
-        sprintf(buffer, "Mega Man | FPS: %d", (int)(1.0f / dt));
+        for (int i = 0; i < fpsCap; i++)
+        {
+            avg += values[i];
+        }
+
+        avg /= fpsCap;
+
+        char buffer[64];
+        sprintf(buffer, "Mega Man | FPS: %d", (int)avg);
 
         glfwSetWindowTitle(api->window->nativeWindow, buffer);
     }
 
     glClear(GL_COLOR_BUFFER_BIT);
-
     render(api->renderer, getGameInstanceActiveScene());
-
     glfwSwapBuffers(api->window->nativeWindow);
 }
-
 void shutdownGraphicsAPI(void *self)
 {
     CAST_API(GraphicsAPI, self);

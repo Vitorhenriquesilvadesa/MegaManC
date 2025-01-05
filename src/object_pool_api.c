@@ -66,7 +66,6 @@ void updateScene(Scene *scene, float dt)
             {
                 AABBColisionData data = calculateCollisionData(entities[i], entities[j]);
                 entities[i]->onCollision(entities[i], data);
-                // resolveCollision(entities[i], entities[j], &data);
             }
         }
     }

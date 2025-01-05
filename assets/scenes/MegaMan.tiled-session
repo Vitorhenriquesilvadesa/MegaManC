@@ -3,19 +3,21 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "scene001.tmj",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
         "Tilemap001.tsj": {
+            "scaleInDock": 3,
             "scaleInEditor": 1
         },
         "scene001.tmj": {
-            "scale": 2,
+            "scale": 1.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 204.25,
-                "y": 170.75
+                "x": 249.66666666666666,
+                "y": 113.66666666666663
             }
         }
     },
@@ -27,11 +29,13 @@
     "map.tileWidth": 16,
     "map.width": 32,
     "openFiles": [
+        "scene001.tmj",
+        "scene001.tmj"
     ],
     "project": "MegaMan.tiled-project",
     "recentFiles": [
-        "Tilemap001.tsj",
-        "scene001.tmj"
+        "scene001.tmj",
+        "Tilemap001.tsj"
     ],
     "tileset.lastUsedFormat": "json",
     "tileset.tileSize": {

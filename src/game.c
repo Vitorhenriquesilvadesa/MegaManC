@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <animation.h>
 #include <test_scene.h>
+#include <audio_api.h>
 
 #include <GLFW/glfw3.h>
 
@@ -146,6 +147,7 @@ void registerServices(Game *game)
     registerGraphicsAPI(game);
     registerObjectPoolAPI(game);
     registerEventAPI(game);
+    registerAudioAPI(game);
 }
 
 void registerGraphicsAPI(Game *game)
@@ -167,6 +169,12 @@ void registerEventAPI(Game *game)
 {
     TriggerAPI *triggers = newTriggerAPI();
     registerService(game, AS_SERVICE_PTR(triggers));
+}
+
+void registerAudioAPI(Game *game)
+{
+    AudioAPI *audio = newAudioAPI();
+    registerService(game, AS_SERVICE_PTR(audio));
 }
 
 void initServices(Game *game)

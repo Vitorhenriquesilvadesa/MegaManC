@@ -91,7 +91,7 @@ void render(Renderer2D *renderer, Scene *scene)
 
     for (uint32_t i = 0; i < scene->entityCount; i++)
     {
-        // renderCollider(entities[i], renderer->camera);
+        renderCollider(entities[i], renderer->camera);
 
         if (!entities[i]->isVisible)
         {
@@ -258,7 +258,7 @@ void renderTilemap(TilemapData *tilemap, Camera2D *camera)
             shaderSetInt(shader, "id", tile.id);
             mat4s transformation = GLMS_MAT4_IDENTITY_INIT;
             transformation = glms_translate(transformation, (vec3s){tile.position.x + tileSize.x / 2.0f, tile.position.y + tileSize.y / 2.0f, 0.0f});
-            transformation = glms_scale(transformation, (vec3s){tileSize.x, tileSize.y, 1.0f});
+            transformation = glms_scale(transformation, (vec3s){tileSize.x + 0.01f, tileSize.y + 0.01f, 1.0f});
             shaderSetMat4(shader, "model", transformation);
             drawMesh(quad);
         }

@@ -5,6 +5,7 @@ project(MegaMan)
 set(SOURCE_DIR src)
 
 set(GLAD_DIR "lib/glad")
+set(OPENAL_DIR "lib/openal")
 set(GLFW_DIR "lib/glfw")
 set(CGLM_DIR "lib/cglm")
 set(CJSON_DIR "lib/cjson")
@@ -14,6 +15,7 @@ file(GLOB SOURCE_FILES "${SOURCE_DIR}/*.c" "${SOURCE_DIR}/*.h")
 
 include_directories(
     ${GLFW_DIR}/include 
+    ${OPENAL_DIR}/include 
     ${GLAD_DIR}/include  
     ${CGLM_DIR}/include
     ${CJSON_DIR}
@@ -27,10 +29,11 @@ include_directories(
     src/pool
     src/scenes
     src/event
+    src/audio
 )
 
-link_directories(${GLFW_DIR}/lib-mingw-w64)
+link_directories(${GLFW_DIR}/lib-mingw-w64 ${OPENAL_DIR})
 
 add_executable(MegaMan ${SOURCE_FILES})
 
-target_link_libraries(MegaMan glfw3 opengl32)
+target_link_libraries(MegaMan glfw3 opengl32 OpenAL32)
