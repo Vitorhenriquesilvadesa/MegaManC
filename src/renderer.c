@@ -85,17 +85,9 @@ Renderer2D *newRenderer()
 void render(Renderer2D *renderer, Scene *scene)
 {
     Entity **entities = scene->entities;
-    Tile *tilemap = scene->tilemap;
+    TilemapData *tilemap = scene->tilemap;
 
-    for (uint32_t i = 0; i < scene->tileCount; i++)
-    {
-        if (isTileOnScreen(tilemap[i], renderer->camera))
-        {
-            renderTile(tilemap[i], renderer->camera);
-        }
-        // renderWireframe(entities[i], renderer->camera);
-        // renderCollider(entities[i], renderer->camera);
-    }
+    renderTilemap(tilemap, renderer->camera);
 
     for (uint32_t i = 0; i < scene->entityCount; i++)
     {
@@ -232,6 +224,10 @@ void renderLine(Renderer2D *renderer, Line line)
 
 void renderTile(Tile tile, Camera2D *camera)
 {
+}
+
+void renderTilemap(TilemapData *tilemap, Camera2D *camera)
+{
     static Shader *shader = NULL;
 
     if (!shader)
@@ -241,26 +237,35 @@ void renderTile(Tile tile, Camera2D *camera)
     }
 
     glActiveTexture(GL_TEXTURE0);
-    bindTexture(tile.atlas->atlas);
+    bindTexture(tilemap->atlas->atlas);
     bindShader(shader);
 
-    shaderSetInt(shader, "atlasColumns", tile.atlas->columnCount);
-    shaderSetInt(shader, "atlasRows", tile.atlas->rowCount);
-    shaderSetInt(shader, "id", tile.id);
-
+    shaderSetInt(shader, "atlasColumns", tilemap->atlas->columnCount);
+    shaderSetInt(shader, "atlasRows", tilemap->atlas->rowCount);
     shaderSetMat4(shader, "projection", cameraGetProjectionMatrix(camera));
     shaderSetMat4(shader, "view", cameraGetViewMatrix(camera));
-
-    mat4s transformation = GLMS_MAT4_IDENTITY_INIT;
-    transformation = glms_translate(transformation, (vec3s){tile.position.x + tile.size.x / 2.0f, tile.position.y + tile.size.y / 2.0f, 0.0f});
-    transformation = glms_scale(transformation, (vec3s){tile.size.x, tile.size.y, 1.0f});
-
-    shaderSetMat4(shader, "model", transformation);
-
     shaderSetInt(shader, "albedo", 0);
 
     bindMesh(quad);
-    drawMesh(quad);
+
+    for (size_t i = 0; i < tilemap->tileCount; i++)
+    {
+        Tile tile = tilemap->tiles[i];
+        vec2s tileSize = tilemap->atlas->tileSize;
+
+        if (isTileOnScreen(tile, tilemap->atlas->tileSize, camera))
+        {
+            shaderSetInt(shader, "id", tile.id);
+            mat4s transformation = GLMS_MAT4_IDENTITY_INIT;
+            transformation = glms_translate(transformation, (vec3s){tile.position.x + tileSize.x / 2.0f, tile.position.y + tileSize.y / 2.0f, 0.0f});
+            transformation = glms_scale(transformation, (vec3s){tileSize.x, tileSize.y, 1.0f});
+            shaderSetMat4(shader, "model", transformation);
+            drawMesh(quad);
+        }
+
+        // renderWireframe(entities[i], renderer->camera);
+        // renderCollider(entities[i], renderer->camera);
+    }
 
     unbindTextures();
     unbindMeshes();

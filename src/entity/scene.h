@@ -5,18 +5,15 @@
 #include <stdint.h>
 #include <tilemap.h>
 
-typedef struct
+typedef struct Scene
 {
     Entity **entities;
-    Tile *tilemap;
+    TilemapData *tilemap;
     uint32_t entityCount;
     uint32_t entityCapacity;
-    uint32_t tileCount;
-    uint32_t tileCapacity;
 } Scene;
 
-Scene *newScene();
+Scene *newScene(TilemapData *tilemap);
 void addObjectToScene(Scene *scene, Entity *entity);
-void addTileToScene(Scene *scene, Tile tile);
 
 #endif

@@ -1,6 +1,8 @@
 #include <aabb.h>
 #include <allocator.h>
 #include <entity.h>
+#include <game.h>
+#include <graphics_api.h>
 
 AABB *newAABB(vec2s min, vec2s max)
 {
@@ -118,4 +120,35 @@ void resolveCollision(Entity *a, Entity *b, AABBColisionData *collisionData)
     move = glms_vec2_add(move, glms_vec2_scale(collisionData->normal, 0.01f));
 
     movable->transform.position = glms_vec2_add(movable->transform.position, move);
+}
+
+Entity *newCollider(vec2s position, vec2s size)
+{
+    static SpriteRenderer *renderer;
+
+    if (!renderer)
+    {
+        GraphicsAPI *graphics = (GraphicsAPI *)getGameInstanceService(SERVICE_TYPE_GRAPHICS);
+
+        Shader *shader = getShader(graphics, SHADER_TYPE_SPRITE);
+        Texture *texture = newTextureFromImage("../assets/sprites/null/null.png");
+        Animation *animation = newAnimation(01, 01, texture, false, PLAY_FROM_BEGIN);
+        renderer = newSpriteRenderer(shader, animation);
+    }
+
+    Entity *entity = newEntity(ENTITY_TYPE_COLLIDER, onUpdateNull, onCollisionNull,
+                               position, size,
+                               (vec2s){0.0f, 0.0f},
+                               (vec2s){size.x, size.y},
+                               true, false, renderer);
+
+    return entity;
+}
+
+void onUpdateNull(void *self, float dt)
+{
+}
+
+void onCollisionNull(void *self, AABBColisionData data)
+{
 }

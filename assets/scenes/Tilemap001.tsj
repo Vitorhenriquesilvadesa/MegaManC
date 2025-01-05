@@ -1,0 +1,14 @@
+{ "columns":8,
+ "image":"../assets/tilemap/tilemap_001.png",
+ "imageheight":112,
+ "imagewidth":128,
+ "margin":0,
+ "name":"TileSet001",
+ "spacing":0,
+ "tilecount":56,
+ "tiledversion":"1.11.0",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.10"
+}

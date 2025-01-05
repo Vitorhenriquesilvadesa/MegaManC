@@ -53,6 +53,7 @@ void renderWireframe(Entity *entity, Camera2D *camera);
 void renderCollider(Entity *entity, Camera2D *camera);
 void renderLine(Renderer2D *renderer, Line line);
 void renderTile(Tile tile, Camera2D *camera);
+void renderTilemap(TilemapData *tilemap, Camera2D *camera);
 
 void drawLine(Renderer2D *renderer, Ray ray, float distance);
 

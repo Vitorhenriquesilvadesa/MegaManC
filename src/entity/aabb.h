@@ -35,5 +35,8 @@ AABB *newAABB(vec2s min, vec2s max);
 bool AABBIntersect(struct Entity *a, struct Entity *b);
 AABBColisionData calculateCollisionData(Entity *a, Entity *b);
 void resolveCollision(Entity *a, Entity *b, AABBColisionData *collisionData);
+Entity *newCollider(vec2s position, vec2s size);
+void onCollisionNull(void *self, AABBColisionData data);
+void onUpdateNull(void *self, float dt);
 
 #endif

@@ -91,7 +91,7 @@ void initGame(Game *game, float minFps, float maxDeltaTime, bool lockFps)
 
 void updateGame(Game *game, bool render)
 {
-    if (1)
+    if (game->enableUpdates)
     {
         calculateGameDeltaTime(game);
 

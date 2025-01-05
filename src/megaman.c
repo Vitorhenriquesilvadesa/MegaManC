@@ -69,7 +69,7 @@ Megaman *newMegaman(vec2s position)
     Entity entity;
 
     initEntity(&entity, ENTITY_TYPE_MEGAMAN, onUpdateMegaman, onCollisionMegaman, position, MEGAMAN_SIZE,
-               (vec2s){8.0f, 3.0f}, (vec2s){22.0f, 26.0f}, false, true, renderer);
+               (vec2s){8.0f, 3.0f}, (vec2s){22.0f, 24.0f}, false, true, renderer);
 
     Megaman *megaman = ALLOCATE(Megaman, 1);
     megaman->entity = entity;
@@ -176,6 +176,7 @@ void onUpdateMegaman(void *self, float dt)
     }
 
     megaman->entity.transform.position.y -= megaman->speed.y * dt;
+    graphics->renderer->camera->position.x = megaman->entity.transform.position.x;
 }
 
 static bool isOnRightWall(Entity *entity)
