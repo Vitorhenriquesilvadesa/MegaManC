@@ -2,6 +2,7 @@
 #include <allocator.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <windows.h>
 
 #define STB_VORBIS_HEADER_ONLY
 #include <stb_vorbis.c>
@@ -68,6 +69,9 @@ void updateAudioAPI(void *self, float dt)
 
 void shutdownAudioAPI(void *self)
 {
+    CAST_API(AudioAPI, self);
+    alcDestroyContext(api->context);
+    alcCloseDevice(api->device);
 }
 
 void playAudioWAV(AudioAPI *api, const char *filepath)
@@ -139,13 +143,18 @@ void playAudioWAV(AudioAPI *api, const char *filepath)
     FREE(samples);
 }
 
-void playAudioOGG(AudioAPI *api, const char *filepath)
+DWORD WINAPI playAudioOGGAsync(LPVOID param)
 {
+    AudioPlayTask *task = (AudioPlayTask *)param;
+    AudioAPI *api = task->audio;
+    const char *filepath = task->filepath;
+
     FILE *file = fopen(filepath, "rb");
     if (!file)
     {
         fprintf(stderr, "Failed to open OGG file: %s\n", filepath);
-        return;
+        free(task);
+        return 0;
     }
 
     int channels, sampleRate;
@@ -155,7 +164,8 @@ void playAudioOGG(AudioAPI *api, const char *filepath)
     {
         fprintf(stderr, "Failed to decode OGG file: %s\n", filepath);
         fclose(file);
-        return;
+        free(task);
+        return 0;
     }
     fclose(file);
 
@@ -172,7 +182,8 @@ void playAudioOGG(AudioAPI *api, const char *filepath)
     {
         fprintf(stderr, "Unsupported channel count in OGG file: %d\n", channels);
         FREE(output);
-        return;
+        free(task);
+        return 0;
     }
 
     Audio *audio = ALLOCATE(Audio, 1);
@@ -190,4 +201,22 @@ void playAudioOGG(AudioAPI *api, const char *filepath)
     alSourcePlay(audio->source);
 
     appendLinkedList(api->audios, audio);
+
+    free(task);
+    return 0;
+}
+
+void playAudioOGGAsyncWrapper(AudioAPI *api, const char *filepath)
+{
+    AudioPlayTask *task = malloc(sizeof(AudioPlayTask));
+    task->audio = api;
+    task->filepath = filepath;
+    task->format = AUDIO_FORMAT_OGG;
+
+    CreateThread(NULL, 0, playAudioOGGAsync, task, 0, NULL);
+}
+
+void playAudioOGG(AudioAPI *api, const char *filepath)
+{
+    playAudioOGGAsyncWrapper(api, filepath);
 }

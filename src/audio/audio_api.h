@@ -38,10 +38,17 @@ typedef struct
     LinkedList *audios;
 } AudioAPI;
 
+typedef enum
+{
+    AUDIO_FORMAT_WAV,
+    AUDIO_FORMAT_OGG,
+} AudioFormat;
+
 typedef struct
 {
     AudioAPI *audio;
     const char *filepath;
+    AudioFormat format;
 } AudioPlayTask;
 
 AudioAPI *newAudioAPI();
@@ -51,5 +58,7 @@ void updateAudioAPI(void *self, float dt);
 void shutdownAudioAPI(void *self);
 void playAudioWAV(AudioAPI *api, const char *filepath);
 void playAudioOGG(AudioAPI *api, const char *filepath);
+
+void playAudioOGGAsyncWrapper(AudioAPI *api, const char *filepath);
 
 #endif

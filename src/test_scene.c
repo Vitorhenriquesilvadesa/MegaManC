@@ -20,7 +20,7 @@ Scene *getTestScene()
     addObjectToScene(scene, AS_ENTITY_PTR(newMegaman((vec2s){0.0f, -64.0f})));
 
     AudioAPI *audio = (AudioAPI *)getGameInstanceService(SERVICE_TYPE_AUDIO);
-    playAudioOGG(audio, "../assets/audio/music/001.ogg");
+    playAudioOGGAsyncWrapper(audio, "../assets/audio/music/001.ogg");
 
     return scene;
 }
