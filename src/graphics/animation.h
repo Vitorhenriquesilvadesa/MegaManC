@@ -22,7 +22,7 @@ typedef struct
     Texture *texture;
 } Animation;
 
-Animation *newAnimation(uint32_t frameCount, uint32_t speed, Texture *texture, bool isLooping, AnimationPlay play);
+Animation newAnimation(uint32_t frameCount, uint32_t speed, Texture *texture, bool isLooping, AnimationPlay play);
 void updateAnimation(Animation *animation, float dt);
 
 #endif

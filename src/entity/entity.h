@@ -50,6 +50,6 @@ mat4s entityGetTransformationMatrix(Entity *entity);
 void updateEntity(Entity *entity, float dt);
 void freeEntity(Entity *entity);
 bool isEntityOnScreen(Entity *entity, struct Camera2D *camera);
-void setAnimation(Entity *entity, Animation *animation, AnimationPlay play, bool captureFrameTime);
+void setAnimation(Entity *entity, Animation animation, AnimationPlay play, bool captureFrameTime);
 
 #endif

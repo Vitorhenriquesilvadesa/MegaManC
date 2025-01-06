@@ -7,11 +7,11 @@
 
 typedef struct
 {
-    Animation *currentAnimation;
+    Animation currentAnimation;
     Shader *shader;
 } SpriteRenderer;
 
-SpriteRenderer *newSpriteRenderer(Shader *shader, Animation *animation);
+SpriteRenderer *newSpriteRenderer(Shader *shader, Animation animation);
 void freeSpriteRenderer(SpriteRenderer *renderer);
 
 #endif

@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define STB_VORBIS_HEADER_ONLY
+#include <stb_vorbis.c>
+
 AudioAPI *newAudioAPI()
 {
     AudioAPI *api = ALLOCATE(AudioAPI, 1);
@@ -55,7 +58,7 @@ void updateAudioAPI(void *self, float dt)
         {
             alDeleteSources(1, &audio->source);
             alDeleteBuffers(1, &audio->buffer);
-            removeUsingPreditace(api->audios, (Predicate)audio);
+            removeUsingPredicate(api->audios, (Predicate)audio);
             FREE(audio);
         }
 
@@ -134,4 +137,57 @@ void playAudioWAV(AudioAPI *api, const char *filepath)
     fclose(file);
 
     FREE(samples);
+}
+
+void playAudioOGG(AudioAPI *api, const char *filepath)
+{
+    FILE *file = fopen(filepath, "rb");
+    if (!file)
+    {
+        fprintf(stderr, "Failed to open OGG file: %s\n", filepath);
+        return;
+    }
+
+    int channels, sampleRate;
+    short *output;
+    int sampleCount = stb_vorbis_decode_filename(filepath, &channels, &sampleRate, &output);
+    if (sampleCount <= 0)
+    {
+        fprintf(stderr, "Failed to decode OGG file: %s\n", filepath);
+        fclose(file);
+        return;
+    }
+    fclose(file);
+
+    ALenum format;
+    if (channels == 1)
+    {
+        format = AL_FORMAT_MONO16;
+    }
+    else if (channels == 2)
+    {
+        format = AL_FORMAT_STEREO16;
+    }
+    else
+    {
+        fprintf(stderr, "Unsupported channel count in OGG file: %d\n", channels);
+        FREE(output);
+        return;
+    }
+
+    Audio *audio = ALLOCATE(Audio, 1);
+    alGenBuffers(1, &audio->buffer);
+    alBufferData(audio->buffer, format, output, sampleCount * sizeof(short), sampleRate);
+
+    FREE(output);
+
+    alGenSources(1, &audio->source);
+    alSourcei(audio->source, AL_BUFFER, audio->buffer);
+    alSourcei(audio->source, AL_LOOPING, AL_FALSE);
+
+    audio->isLoop = false;
+
+    alSourcePlay(audio->source);
+
+    appendLinkedList(api->audios, audio);
 }

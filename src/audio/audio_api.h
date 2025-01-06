@@ -38,11 +38,18 @@ typedef struct
     LinkedList *audios;
 } AudioAPI;
 
+typedef struct
+{
+    AudioAPI *audio;
+    const char *filepath;
+} AudioPlayTask;
+
 AudioAPI *newAudioAPI();
 
 void initAudioAPI(void *self);
 void updateAudioAPI(void *self, float dt);
 void shutdownAudioAPI(void *self);
 void playAudioWAV(AudioAPI *api, const char *filepath);
+void playAudioOGG(AudioAPI *api, const char *filepath);
 
 #endif

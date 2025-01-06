@@ -132,7 +132,7 @@ Entity *newCollider(vec2s position, vec2s size)
 
         Shader *shader = getShader(graphics, SHADER_TYPE_SPRITE);
         Texture *texture = newTextureFromImage("../assets/sprites/null/null.png");
-        Animation *animation = newAnimation(01, 01, texture, false, PLAY_FROM_BEGIN);
+        Animation animation = newAnimation(01, 01, texture, false, PLAY_FROM_BEGIN);
         renderer = newSpriteRenderer(shader, animation);
     }
 

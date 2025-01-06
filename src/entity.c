@@ -56,7 +56,7 @@ mat4s entityGetTransformationMatrix(Entity *entity)
 void updateEntity(Entity *entity, float dt)
 {
     entity->onUpdate(entity, dt);
-    updateAnimation(entity->renderer->currentAnimation, dt);
+    updateAnimation(&entity->renderer->currentAnimation, dt);
 }
 
 void freeEntity(Entity *entity)
@@ -78,19 +78,19 @@ bool isEntityOnScreen(Entity *entity, Camera2D *camera)
         pos.y < camPos.y + 128 + scale.y / 2.0f);
 }
 
-void setAnimation(Entity *entity, Animation *animation, AnimationPlay play, bool captureFrameTime)
+void setAnimation(Entity *entity, Animation animation, AnimationPlay play, bool captureFrameTime)
 {
-    if (animation == entity->renderer->currentAnimation)
+    if (animation.texture == entity->renderer->currentAnimation.texture)
     {
         return;
     }
 
-    uint32_t frameCount = animation->frameCount;
-    uint32_t currentFrame = entity->renderer->currentAnimation->currentFrame;
+    uint32_t frameCount = animation.frameCount;
+    uint32_t currentFrame = entity->renderer->currentAnimation.currentFrame;
 
     if (captureFrameTime)
     {
-        animation->elapsedTime = 0.0f;
+        animation.elapsedTime = 0.0f;
     }
 
     if (currentFrame > frameCount || play == PLAY_FROM_BEGIN)
@@ -99,5 +99,5 @@ void setAnimation(Entity *entity, Animation *animation, AnimationPlay play, bool
     }
 
     entity->renderer->currentAnimation = animation;
-    entity->renderer->currentAnimation->currentFrame = currentFrame;
+    entity->renderer->currentAnimation.currentFrame = currentFrame;
 }

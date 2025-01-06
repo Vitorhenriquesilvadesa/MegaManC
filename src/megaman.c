@@ -17,8 +17,8 @@ static MegamanResources megamanResources = {};
 
 static void createAnimations()
 {
-    megamanResources.normalAnimations = ALLOCATE(Animation *, MEGAMAN_STATE_MAX);
-    megamanResources.shootingAnimations = ALLOCATE(Animation *, MEGAMAN_STATE_MAX);
+    megamanResources.normalAnimations = ALLOCATE(Animation, MEGAMAN_STATE_MAX);
+    megamanResources.shootingAnimations = ALLOCATE(Animation, MEGAMAN_STATE_MAX);
 
     {
         Texture *texture = newTextureFromImage("../assets/sprites/megaman/walk.png");

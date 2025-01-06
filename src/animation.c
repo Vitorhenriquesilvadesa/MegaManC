@@ -1,17 +1,17 @@
 #include <animation.h>
 #include <allocator.h>
 
-Animation *newAnimation(uint32_t frameCount, uint32_t speed, Texture *texture, bool isLooping, AnimationPlay play)
+Animation newAnimation(uint32_t frameCount, uint32_t speed, Texture *texture, bool isLooping, AnimationPlay play)
 {
-    Animation *animation = ALLOCATE(Animation, 1);
+    Animation animation;
 
-    animation->currentFrame = 0;
-    animation->elapsedTime = 0.0f;
-    animation->frameCount = frameCount;
-    animation->texture = texture;
-    animation->speed = speed;
-    animation->isLooping = isLooping;
-    animation->play = play;
+    animation.currentFrame = 0;
+    animation.elapsedTime = 0.0f;
+    animation.frameCount = frameCount;
+    animation.texture = texture;
+    animation.speed = speed;
+    animation.isLooping = isLooping;
+    animation.play = play;
 
     return animation;
 }

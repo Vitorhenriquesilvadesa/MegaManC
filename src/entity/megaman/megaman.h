@@ -13,8 +13,8 @@ typedef enum
 
 typedef struct
 {
-    Animation **normalAnimations;
-    Animation **shootingAnimations;
+    Animation *normalAnimations;
+    Animation *shootingAnimations;
 } MegamanResources;
 
 typedef struct

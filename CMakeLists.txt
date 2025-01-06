@@ -10,6 +10,12 @@ set(GLFW_DIR "lib/glfw")
 set(CGLM_DIR "lib/cglm")
 set(CJSON_DIR "lib/cjson")
 set(STB_IMAGE_DIR "lib/stb_image")
+set(STB_VORBIS_DIR "lib/stb_vorbis")
+
+set(EXTERNAL_SOURCES
+    ${STB_VORBIS_DIR}/stb_vorbis.c
+)
+
 
 file(GLOB SOURCE_FILES "${SOURCE_DIR}/*.c" "${SOURCE_DIR}/*.h")
 
@@ -20,6 +26,7 @@ include_directories(
     ${CGLM_DIR}/include
     ${CJSON_DIR}
     ${STB_IMAGE_DIR}
+    ${STB_VORBIS_DIR}
     src/service 
     src/graphics 
     src/entity
@@ -34,6 +41,6 @@ include_directories(
 
 link_directories(${GLFW_DIR}/lib-mingw-w64 ${OPENAL_DIR})
 
-add_executable(MegaMan ${SOURCE_FILES})
+add_executable(MegaMan ${SOURCE_FILES} ${EXTERNAL_SOURCES})
 
-target_link_libraries(MegaMan glfw3 opengl32 OpenAL32)
+target_link_libraries(MegaMan glfw3 opengl32 OpenAL32.lib)

@@ -2,7 +2,7 @@
 #include <allocator.h>
 #include <entity.h>
 
-SpriteRenderer *newSpriteRenderer(Shader *shader, Animation *animation)
+SpriteRenderer *newSpriteRenderer(Shader *shader, Animation animation)
 {
     SpriteRenderer *renderer = ALLOCATE(SpriteRenderer, 1);
     renderer->shader = shader;
@@ -13,5 +13,5 @@ SpriteRenderer *newSpriteRenderer(Shader *shader, Animation *animation)
 
 void freeSpriteRenderer(SpriteRenderer *renderer)
 {
-    //FREE(renderer);
+    // FREE(renderer);
 }

@@ -91,7 +91,7 @@ void render(Renderer2D *renderer, Scene *scene)
 
     for (uint32_t i = 0; i < scene->entityCount; i++)
     {
-        renderCollider(entities[i], renderer->camera);
+        // renderCollider(entities[i], renderer->camera);
 
         if (!entities[i]->isVisible)
         {
@@ -120,11 +120,11 @@ void renderEntity(Entity *entity, Camera2D *camera)
     Shader *shader = entity->renderer->shader;
 
     glActiveTexture(GL_TEXTURE0);
-    bindTexture(entity->renderer->currentAnimation->texture);
+    bindTexture(entity->renderer->currentAnimation.texture);
     bindShader(shader);
 
-    shaderSetInt(shader, "frameCount", entity->renderer->currentAnimation->frameCount);
-    shaderSetInt(shader, "currentFrame", entity->renderer->currentAnimation->currentFrame);
+    shaderSetInt(shader, "frameCount", entity->renderer->currentAnimation.frameCount);
+    shaderSetInt(shader, "currentFrame", entity->renderer->currentAnimation.currentFrame);
     shaderSetMat4(shader, "projection", cameraGetProjectionMatrix(camera));
     shaderSetMat4(shader, "view", cameraGetViewMatrix(camera));
     shaderSetMat4(shader, "model", entityGetTransformationMatrix(entity));
