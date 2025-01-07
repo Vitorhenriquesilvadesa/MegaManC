@@ -40,6 +40,7 @@ MegaBusterShoot *newMegaBusterShoot(vec2s position, float angle)
 void onUpdateMegaBusterShoot(void *self, float dt)
 {
     MegaBusterShoot *shoot = (MegaBusterShoot *)self;
+
     float angleRadians = glm_rad(shoot->angle);
 
     float dx = cos(angleRadians) * shoot->speed * dt;

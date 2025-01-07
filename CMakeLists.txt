@@ -19,6 +19,7 @@ set(EXTERNAL_SOURCES
 file(GLOB_RECURSE ENEMY_SOURCE_FILES 
     "${SOURCE_DIR}/entity/enemies/*.c"
     "${SOURCE_DIR}/entity/megaman/weapons/*.c"
+    "${SOURCE_DIR}/entity/vfx/*.c"
 )
 
 
@@ -26,6 +27,7 @@ file(GLOB SOURCE_FILES
     "${SOURCE_DIR}/*.c" 
     "${SOURCE_DIR}/*.h"
     "${SOURCE_DIR}/entity/megaman/*.c" 
+    "${SOURCE_DIR}/entity/vfx/*.c" 
     "${SOURCE_DIR}/entity/enemies/*.c" 
 )
 
@@ -45,6 +47,7 @@ include_directories(
     src/entity
     src/entity/megaman
     src/entity/enemies
+    src/entity/vfx
     src/memory 
     src/game 
     src/util

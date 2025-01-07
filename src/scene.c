@@ -17,8 +17,6 @@ Scene *newScene(TilemapData *tilemap, void *metadata)
 
 void addObjectToScene(Scene *scene, Entity *entity)
 {
-    entity->index = scene->entityCount;
-
     if (scene->entityCount >= scene->entityCapacity - 1)
     {
         uint32_t newCapacity = scene->entityCapacity * ARRAY_GROW_FACTOR;
@@ -26,5 +24,6 @@ void addObjectToScene(Scene *scene, Entity *entity)
         scene->entityCapacity = newCapacity;
     }
 
+    entity->index = scene->entityCount;
     scene->entities[scene->entityCount++] = entity;
 }

@@ -2,8 +2,10 @@
 #include <megaman/weapons/ally_weapon.h>
 #include <megaman/weapons/mega_buster.h>
 #include <megaman/megaman.h>
+#include <vfx/small_explosion.h>
 #include <game.h>
 #include <graphics_api.h>
+#include <object_pool_api.h>
 #include <trigger.h>
 #include <audio_api.h>
 #include <aabb.h>
@@ -51,7 +53,7 @@ Metal *newMetal(vec2s position)
                false, true, renderer);
 
     Enemy enemy;
-    initEnemy(&enemy, entity, ENEMY_TYPE_METAL);
+    initEnemy(&enemy, entity, ENEMY_TYPE_METAL, METAL_MAX_HP);
 
     metal->attackTimer = 0.0f;
     metal->defendTimer = METAL_DEFENT_TIMER_MAX;
@@ -124,11 +126,23 @@ void onCollisionMetal(void *self, AABBColisionData data)
                 {
                     shoot->angle = -45.0f;
                 }
+                break;
             }
 
             case METAL_STATE_ATTACK:
             {
                 metal->enemy.life -= weapon->damage;
+                shoot->weapon.entity.enableCollisions = false;
+                destroyEntity(getGameInstanceActiveScene(), shoot->weapon.entity.index);
+
+                if (metal->enemy.life == 0)
+                {
+                    Scene *scene = getGameInstanceActiveScene();
+                    vec2s position = metal->enemy.entity.transform.position;
+                    destroyEntity(scene, metal->enemy.entity.index);
+                    addObjectToScene(scene, AS_ENTITY_PTR(newSmallExplosion(position)));
+                }
+                break;
             }
             }
         }

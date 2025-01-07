@@ -212,7 +212,7 @@ bool onMegamanLandTrigger(void *self)
 void onMegamanShoot(void *self)
 {
     Megaman *megaman = (Megaman *)self;
-    megaman->shootTime = 0.3f;
+    megaman->shootTime = 0.15f;
     Scene *scene = getGameInstanceActiveScene();
 
     vec2s position = (vec2s){megaman->entity.transform.position.x +

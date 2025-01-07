@@ -25,6 +25,7 @@ typedef enum
     ENTITY_TYPE_COLLIDER = BIT(2),
     ENTITY_TYPE_ALLY_SHOOT = BIT(3),
     ENTITY_TYPE_ENEMY = BIT(4),
+    ENTITY_TYPE_VFX = BIT(5),
 } EntityType;
 
 typedef struct

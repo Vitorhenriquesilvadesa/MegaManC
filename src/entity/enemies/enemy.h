@@ -3,6 +3,8 @@
 
 #include <entity.h>
 
+#define METAL_MAX_HP 1
+
 typedef enum
 {
     ENEMY_TYPE_METAL,
@@ -15,6 +17,6 @@ typedef struct
     EnemyType type;
 } Enemy;
 
-void initEnemy(Enemy *enemy, Entity entity, EnemyType type);
+void initEnemy(Enemy *enemy, Entity entity, EnemyType type, short life);
 
 #endif

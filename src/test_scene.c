@@ -19,7 +19,6 @@ Scene *getTestScene()
 
     generateColliders(scene, &mask, tilemap->width, tilemap->height);
     addObjectToScene(scene, AS_ENTITY_PTR(megaman));
-
     addObjectToScene(scene, AS_ENTITY_PTR(newMetal((vec2s){16.0f, 7.0f})));
     addObjectToScene(scene, AS_ENTITY_PTR(newMetal((vec2s){-32.0f, 55.0f})));
 

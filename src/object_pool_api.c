@@ -1,6 +1,7 @@
 #include <object_pool_api.h>
 #include <allocator.h>
 #include <graphics_api.h>
+#include <vfx/vfx.h>
 #include <game.h>
 
 ObjectPoolAPI *newObjectPoolAPI()
@@ -49,11 +50,26 @@ void updateScene(Scene *scene, float dt)
         }
         else
         {
-            if (!(entities[i]->type & ENTITY_TYPE_COLLIDER))
+            if (!(entities[i]->type & (ENTITY_TYPE_COLLIDER | ENTITY_TYPE_VFX)))
             {
-                destroyEntity(scene, i);
+                destroyEntity(scene, entities[i]->index);
             }
 
+            continue;
+        }
+
+        if ((entities[i]->type & ENTITY_TYPE_VFX))
+        {
+            Vfx *vfx = (Vfx *)entities[i];
+
+            if (vfx->lifeTime <= 0.0f)
+            {
+                destroyEntity(scene, entities[i]->index);
+            }
+            else
+            {
+                vfx->lifeTime -= dt;
+            }
             continue;
         }
 
@@ -87,13 +103,10 @@ void updateScene(Scene *scene, float dt)
 
 void destroyEntity(Scene *scene, int index)
 {
-    freeEntity(scene->entities[index]);
+    Entity *entity = scene->entities[index];
+    scene->entities[index] = scene->entities[scene->entityCount - 1];
+    scene->entities[index]->index = index;
 
-    for (int i = index; i < scene->entityCount - 1; i++)
-    {
-        scene->entities[i] = scene->entities[i + 1];
-    }
-
+    freeEntity(entity);
     scene->entityCount--;
-    printf("Entity count: %d\n", scene->entityCount);
 }

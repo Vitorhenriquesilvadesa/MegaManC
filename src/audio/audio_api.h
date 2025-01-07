@@ -28,6 +28,7 @@ typedef enum
     AUDIO_NITRO_MAN,
     AUDIO_SOLAR_MAN,
     AUDIO_DINK,
+    AUDIO_SMALL_EXPLOSION,
     AUDIO_MEGA_BUSTER,
     AUDIO_NAME_MAX,
 } AudioName;
