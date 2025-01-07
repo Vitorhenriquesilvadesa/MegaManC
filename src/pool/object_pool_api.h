@@ -17,5 +17,6 @@ void updateObjectPoolAPI(void *self, float dt);
 void shutdownObjectPoolAPI(void *self);
 
 void updateScene(Scene *scene, float dt);
+void destroyEntity(Scene *scene, int index);
 
 #endif

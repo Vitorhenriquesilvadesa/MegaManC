@@ -1,0 +1,14 @@
+{ "columns":9,
+ "image":"..\/tilemap\/nitroman.png",
+ "imageheight":128,
+ "imagewidth":144,
+ "margin":0,
+ "name":"NitroMan",
+ "spacing":0,
+ "tilecount":72,
+ "tiledversion":"1.11.0",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.10"
+}

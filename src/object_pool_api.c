@@ -47,6 +47,15 @@ void updateScene(Scene *scene, float dt)
         {
             updateEntity(entities[i], dt);
         }
+        else
+        {
+            if (!(entities[i]->type & ENTITY_TYPE_COLLIDER))
+            {
+                destroyEntity(scene, i);
+            }
+
+            continue;
+        }
 
         for (uint32_t j = 0; j < scene->entityCount; j++)
         {
@@ -62,6 +71,11 @@ void updateScene(Scene *scene, float dt)
                 continue;
             }
 
+            if (!(entities[i]->enableCollisions && entities[j]->enableCollisions))
+            {
+                continue;
+            }
+
             if (AABBIntersect(entities[i], entities[j]))
             {
                 AABBColisionData data = calculateCollisionData(entities[i], entities[j]);
@@ -69,4 +83,17 @@ void updateScene(Scene *scene, float dt)
             }
         }
     }
+}
+
+void destroyEntity(Scene *scene, int index)
+{
+    freeEntity(scene->entities[index]);
+
+    for (int i = index; i < scene->entityCount - 1; i++)
+    {
+        scene->entities[i] = scene->entities[i + 1];
+    }
+
+    scene->entityCount--;
+    printf("Entity count: %d\n", scene->entityCount);
 }

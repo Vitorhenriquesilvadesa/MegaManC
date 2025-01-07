@@ -6,7 +6,7 @@
 #include <AL/alc.h>
 #include <list.h>
 
-typedef struct
+typedef struct __attribute__((packed))
 {
     unsigned RiffChunk;
     unsigned ChunkSize;
@@ -23,12 +23,28 @@ typedef struct
     unsigned DataSize;
 } WavFileHeader;
 
+typedef enum
+{
+    AUDIO_NITRO_MAN,
+    AUDIO_SOLAR_MAN,
+    AUDIO_DINK,
+    AUDIO_MEGA_BUSTER,
+    AUDIO_NAME_MAX,
+} AudioName;
+
 typedef struct
 {
     bool isLoop;
     ALuint buffer;
     ALuint source;
+    AudioName name;
 } Audio;
+
+typedef struct
+{
+    bool isLoaded;
+    Audio audio;
+} AudioCache;
 
 typedef struct
 {
@@ -36,6 +52,7 @@ typedef struct
     ALCdevice *device;
     ALCcontext *context;
     LinkedList *audios;
+    AudioCache musics[AUDIO_NAME_MAX];
 } AudioAPI;
 
 typedef enum
@@ -49,16 +66,18 @@ typedef struct
     AudioAPI *audio;
     const char *filepath;
     AudioFormat format;
+    AudioName music;
 } AudioPlayTask;
 
 AudioAPI *newAudioAPI();
 
+bool isAudioPlaying(void *context);
 void initAudioAPI(void *self);
 void updateAudioAPI(void *self, float dt);
 void shutdownAudioAPI(void *self);
-void playAudioWAV(AudioAPI *api, const char *filepath);
-void playAudioOGG(AudioAPI *api, const char *filepath);
+void playAudioWAV(AudioAPI *api, const char *filepath, AudioName music);
+void playAudioOGG(AudioAPI *api, const char *filepath, AudioName music);
 
-void playAudioOGGAsyncWrapper(AudioAPI *api, const char *filepath);
+void playAudioOGGAsyncWrapper(AudioAPI *api, const char *filepath, AudioName music);
 
 #endif

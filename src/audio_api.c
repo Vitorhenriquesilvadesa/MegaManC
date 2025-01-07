@@ -16,8 +16,20 @@ AudioAPI *newAudioAPI()
     api->service.shutdown = shutdownAudioAPI;
 
     api->audios = newLinkedList();
+    for (int i = 0; i < AUDIO_NAME_MAX; ++i)
+    {
+        api->musics[i].isLoaded = false;
+    }
 
     return api;
+}
+
+bool isAudioPlaying(void *context)
+{
+    Audio *audio = (Audio *)context;
+    ALint state;
+    alGetSourcei(audio->source, AL_SOURCE_STATE, &state);
+    return state == AL_PLAYING;
 }
 
 void initAudioAPI(void *self)
@@ -25,7 +37,6 @@ void initAudioAPI(void *self)
     CAST_API(AudioAPI, self);
 
     api->device = alcOpenDevice(NULL);
-
     if (!api->device)
     {
         printf("Failed to open audio device.");
@@ -33,7 +44,6 @@ void initAudioAPI(void *self)
     }
 
     api->context = alcCreateContext(api->device, NULL);
-
     if (!api->context)
     {
         printf("Failed to create OpenAL context.");
@@ -58,9 +68,7 @@ void updateAudioAPI(void *self, float dt)
         if (state != AL_PLAYING && !audio->isLoop)
         {
             alDeleteSources(1, &audio->source);
-            alDeleteBuffers(1, &audio->buffer);
-            removeUsingPredicate(api->audios, (Predicate)audio);
-            FREE(audio);
+            removeUsingPredicate(api->audios, isAudioPlaying);
         }
 
         current = current->next;
@@ -74,8 +82,26 @@ void shutdownAudioAPI(void *self)
     alcCloseDevice(api->device);
 }
 
-void playAudioWAV(AudioAPI *api, const char *filepath)
+void playAudioWAV(AudioAPI *api, const char *filepath, AudioName music)
 {
+    if (api->musics[music].isLoaded)
+    {
+        ALuint source;
+        alGenSources(1, &source);
+        alSourcei(source, AL_BUFFER, api->musics[music].audio.buffer);
+
+        alSourcePlay(source);
+
+        Audio *newAudio = ALLOCATE(Audio, 1);
+        newAudio->isLoop = api->musics[music].audio.isLoop;
+        newAudio->buffer = api->musics[music].audio.buffer;
+        newAudio->source = source;
+        newAudio->name = music;
+        appendLinkedList(api->audios, newAudio);
+
+        return;
+    }
+
     FILE *file = fopen(filepath, "rb");
     if (!file)
     {
@@ -98,16 +124,9 @@ void playAudioWAV(AudioAPI *api, const char *filepath)
         return;
     }
 
-    if (wavheader.PcmFlags != 1)
+    if (wavheader.PcmFlags != 1 || wavheader.BitDepth != 16)
     {
-        printf("Only PCM files are supported.\n");
-        fclose(file);
-        return;
-    }
-
-    if (wavheader.BitDepth != 16)
-    {
-        printf("Only WAV files with 16 bits per sample are supported.\n");
+        printf("Only PCM WAV files with 16-bit samples are supported.\n");
         fclose(file);
         return;
     }
@@ -129,18 +148,22 @@ void playAudioWAV(AudioAPI *api, const char *filepath)
     alGenSources(1, &source);
     alSourcei(source, AL_BUFFER, buffer);
 
-    alSourcePlay(source);
+    fclose(file);
+    FREE(samples);
+
+    api->musics[music].audio.isLoop = false;
+    api->musics[music].audio.buffer = buffer;
+    api->musics[music].audio.source = source;
+    api->musics[music].isLoaded = true;
 
     Audio *audio = ALLOCATE(Audio, 1);
     audio->isLoop = false;
     audio->buffer = buffer;
     audio->source = source;
-
+    audio->name = music;
     appendLinkedList(api->audios, audio);
 
-    fclose(file);
-
-    FREE(samples);
+    alSourcePlay(source);
 }
 
 DWORD WINAPI playAudioOGGAsync(LPVOID param)
@@ -206,7 +229,7 @@ DWORD WINAPI playAudioOGGAsync(LPVOID param)
     return 0;
 }
 
-void playAudioOGGAsyncWrapper(AudioAPI *api, const char *filepath)
+void playAudioOGGAsyncWrapper(AudioAPI *api, const char *filepath, AudioName music)
 {
     AudioPlayTask *task = malloc(sizeof(AudioPlayTask));
     task->audio = api;
@@ -216,7 +239,7 @@ void playAudioOGGAsyncWrapper(AudioAPI *api, const char *filepath)
     CreateThread(NULL, 0, playAudioOGGAsync, task, 0, NULL);
 }
 
-void playAudioOGG(AudioAPI *api, const char *filepath)
+void playAudioOGG(AudioAPI *api, const char *filepath, AudioName music)
 {
-    playAudioOGGAsyncWrapper(api, filepath);
+    playAudioOGGAsyncWrapper(api, filepath, music);
 }

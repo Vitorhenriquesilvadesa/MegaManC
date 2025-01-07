@@ -16,8 +16,21 @@ set(EXTERNAL_SOURCES
     ${STB_VORBIS_DIR}/stb_vorbis.c
 )
 
+file(GLOB_RECURSE ENEMY_SOURCE_FILES 
+    "${SOURCE_DIR}/entity/enemies/*.c"
+    "${SOURCE_DIR}/entity/megaman/weapons/*.c"
+)
 
-file(GLOB SOURCE_FILES "${SOURCE_DIR}/*.c" "${SOURCE_DIR}/*.h")
+
+file(GLOB SOURCE_FILES 
+    "${SOURCE_DIR}/*.c" 
+    "${SOURCE_DIR}/*.h"
+    "${SOURCE_DIR}/entity/megaman/*.c" 
+    "${SOURCE_DIR}/entity/enemies/*.c" 
+)
+
+list(APPEND SOURCE_FILES ${ENEMY_SOURCE_FILES})
+
 
 include_directories(
     ${GLFW_DIR}/include 
@@ -30,6 +43,8 @@ include_directories(
     src/service 
     src/graphics 
     src/entity
+    src/entity/megaman
+    src/entity/enemies
     src/memory 
     src/game 
     src/util

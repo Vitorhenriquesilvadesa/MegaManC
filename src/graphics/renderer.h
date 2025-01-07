@@ -47,6 +47,10 @@ mat4s cameraGetViewMatrix(Camera2D *camera);
 Camera2D *newCamera(OrthographicFrustum2D frustum);
 Renderer2D *newRenderer();
 
+void setCameraPosition(Camera2D *camera, vec2s position);
+void setCameraPositionX(Camera2D *camera, float x);
+void setCameraPositionY(Camera2D *camera, float y);
+
 void render(Renderer2D *renderer, Scene *scene);
 void renderEntity(Entity *entity, Camera2D *camera);
 void renderWireframe(Entity *entity, Camera2D *camera);

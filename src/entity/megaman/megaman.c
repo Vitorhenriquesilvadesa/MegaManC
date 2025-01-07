@@ -3,9 +3,12 @@
 #include <game.h>
 #include <object_pool_api.h>
 #include <graphics_api.h>
+#include <audio_api.h>
 #include <trigger.h>
 #include <allocator.h>
 #include <ray_cast.h>
+#include <megaman/weapons/mega_buster.h>
+
 #include <GLFW/glfw3.h>
 
 #define MEGAMAN_MAX_SPEED 90.0f
@@ -54,7 +57,6 @@ static void createAnimations()
 Megaman *newMegaman(vec2s position)
 {
     GraphicsAPI *graphics = (GraphicsAPI *)getGameInstanceService(SERVICE_TYPE_GRAPHICS);
-
     Shader *shader = getShader(graphics, SHADER_TYPE_SPRITE);
 
     static bool animationsCreated = false;
@@ -69,7 +71,7 @@ Megaman *newMegaman(vec2s position)
     Entity entity;
 
     initEntity(&entity, ENTITY_TYPE_MEGAMAN, onUpdateMegaman, onCollisionMegaman, position, MEGAMAN_SIZE,
-               (vec2s){8.0f, 3.0f}, (vec2s){22.0f, 24.0f}, false, true, renderer);
+               (vec2s){0.0f, 0.0f}, (vec2s){14.0f, 21.0f}, false, true, renderer);
 
     Megaman *megaman = ALLOCATE(Megaman, 1);
     megaman->entity = entity;
@@ -92,11 +94,6 @@ Megaman *newMegaman(vec2s position)
 
     return megaman;
 }
-
-static bool isOnRightWall(Entity *entity);
-static bool isOnLeftWall(Entity *entity);
-static bool isOnFloor(Entity *entity);
-static bool isOnCeil(Entity *entity);
 
 void onUpdateMegaman(void *self, float dt)
 {
@@ -176,149 +173,11 @@ void onUpdateMegaman(void *self, float dt)
     }
 
     megaman->entity.transform.position.y -= megaman->speed.y * dt;
-    graphics->renderer->camera->position.x = megaman->entity.transform.position.x;
-}
 
-static bool isOnRightWall(Entity *entity)
-{
-    vec2s min = entity->collider.bound.min;
-    vec2s max = entity->collider.bound.max;
+    megaman->entity.transform.position.x = glm_clamp(megaman->entity.transform.position.x,
+                                                     graphics->renderer->camera->position.x - 128, graphics->renderer->camera->position.x + 128);
 
-    vec2s aabbPos = (vec2s){
-        entity->transform.position.x + (min.x + max.x) / 2.0f,
-        entity->transform.position.y + (min.y + max.y) / 2.0f};
-
-    float halfHeight = (max.y - min.y) / 2.0f - 1.0f;
-    float halfWidth = (max.x - min.x) / 2.0f + 1.0f;
-
-    vec2s rayOriginT = {
-        aabbPos.x + halfWidth + 1.0f,
-        aabbPos.y + halfHeight};
-
-    vec2s rayOriginM = {
-        aabbPos.x + halfWidth + 1.0f,
-        aabbPos.y};
-
-    vec2s rayOriginB = {
-        aabbPos.x + halfWidth + 1.0f,
-        aabbPos.y - halfHeight};
-
-    Ray raycastT = {rayOriginT, (vec2s){1.0f, 0.0f}};
-    Ray raycastM = {rayOriginM, (vec2s){1.0f, 0.0f}};
-    Ray raycastB = {rayOriginB, (vec2s){1.0f, 0.0f}};
-
-    if (raycastHit(raycastM, 12))
-    {
-        return true;
-    }
-    else if (raycastHit(raycastB, 12))
-    {
-        return true;
-    }
-
-    return raycastHit(raycastT, 12);
-}
-
-static bool isOnLeftWall(Entity *entity)
-{
-    vec2s min = entity->collider.bound.min;
-    vec2s max = entity->collider.bound.max;
-
-    vec2s aabbPos = (vec2s){
-        entity->transform.position.x + (min.x + max.x) / 2.0f,
-        entity->transform.position.y + (min.y + max.y) / 2.0f};
-
-    float halfHeight = (max.y - min.y) / 2.0f - 1.0f;
-    float halfWidth = (max.x - min.x) / 2.0f + 1.0f;
-
-    vec2s rayOriginT = {
-        aabbPos.x - halfWidth - 1.0f,
-        aabbPos.y + halfHeight};
-
-    vec2s rayOriginM = {
-        aabbPos.x - halfWidth - 1.0f,
-        aabbPos.y};
-
-    vec2s rayOriginB = {
-        aabbPos.x - halfWidth - 1.0f,
-        aabbPos.y - halfHeight};
-
-    Ray raycastT = {rayOriginT, (vec2s){-1.0f, 0.0f}};
-    Ray raycastM = {rayOriginM, (vec2s){-1.0f, 0.0f}};
-    Ray raycastB = {rayOriginB, (vec2s){-1.0f, 0.0f}};
-
-    if (raycastHit(raycastM, 12))
-    {
-        return true;
-    }
-    else if (raycastHit(raycastB, 12))
-    {
-        return true;
-    }
-
-    return raycastHit(raycastT, 12);
-}
-
-static bool isOnFloor(Entity *entity)
-{
-    vec2s min = entity->collider.bound.min;
-    vec2s max = entity->collider.bound.max;
-
-    vec2s aabbPos = (vec2s){
-        entity->transform.position.x + (min.x + max.x) / 2.0f,
-        entity->transform.position.y + (min.y + max.y) / 2.0f};
-
-    float halfHeight = (max.y - min.y) / 2.0f;
-    float halfWidth = (max.x - min.x) / 2.0f;
-
-    vec2s rayOriginL = {
-        aabbPos.x - halfWidth,
-        aabbPos.y + halfHeight + 0.1f};
-
-    vec2s rayOriginR = {
-        aabbPos.x + halfWidth,
-        aabbPos.y + halfHeight + 0.1f};
-
-    Ray raycastL = {rayOriginL, (vec2s){0.0f, -1.0f}};
-    Ray raycastR = {rayOriginR, (vec2s){0.0f, -1.0f}};
-
-    if (raycastHit(raycastR, 9))
-    {
-        return true;
-    }
-
-    return raycastHit(raycastL, 9);
-}
-
-static bool isOnCeil(Entity *entity)
-{
-    vec2s min = entity->collider.bound.min;
-    vec2s max = entity->collider.bound.max;
-
-    vec2s aabbPos = (vec2s){
-        entity->transform.position.x + (min.x + max.x) / 2.0f,
-        entity->transform.position.y + (min.y + max.y) / 2.0f};
-
-    float halfHeight = (max.y - min.y) / 2.0f;
-    float halfWidth = (max.x - min.x) / 2.0f;
-
-    vec2s rayOriginL = {
-        aabbPos.x - halfWidth,
-        aabbPos.y - halfHeight - 0.1f};
-
-    vec2s rayOriginR = {
-        aabbPos.x + halfWidth,
-        aabbPos.y - halfHeight - 0.1f};
-
-    Ray raycastL = {rayOriginL, (vec2s){0.0f, 1.0f}};
-    Ray raycastR = {rayOriginR, (vec2s){0.0f, 1.0f}};
-
-    if (raycastHit(raycastR, 10))
-    {
-        return true;
-    }
-
-    return raycastHit(raycastL, 10);
+    setCameraPositionX(graphics->renderer->camera, megaman->entity.transform.position.x);
 }
 
 void onCollisionMegaman(void *self, AABBColisionData data)
@@ -354,6 +213,19 @@ void onMegamanShoot(void *self)
 {
     Megaman *megaman = (Megaman *)self;
     megaman->shootTime = 0.3f;
+    Scene *scene = getGameInstanceActiveScene();
+
+    vec2s position = (vec2s){megaman->entity.transform.position.x +
+                                 (megaman->entity.isMirrored
+                                      ? -20
+                                      : 20),
+                             megaman->entity.transform.position.y - 2};
+
+    float direction = megaman->entity.isMirrored ? 180 : 0;
+
+    MegaBusterShoot *shoot = newMegaBusterShoot(position, direction);
+
+    addObjectToScene(scene, AS_ENTITY_PTR(shoot));
 }
 
 void onMegamanJump(void *self)
@@ -368,6 +240,7 @@ void onMegamanLand(void *self)
     Megaman *megaman = (Megaman *)self;
     megaman->speed.y = 0.0f;
     megaman->isOnFloor = true;
+    AudioAPI *audio = (AudioAPI *)getGameInstanceService(SERVICE_TYPE_AUDIO);
 }
 
 bool onMegamanCeilTrigger(void *self)

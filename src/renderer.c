@@ -82,6 +82,33 @@ Renderer2D *newRenderer()
     return renderer;
 }
 
+void setCameraPosition(Camera2D *camera, vec2s position)
+{
+    vec2s sceneSize = getGameInstanceActiveScene()->size;
+    vec2s clampedPosition = {
+        glm_clamp(camera->position.x, 0, sceneSize.x - (camera->frustum.right - camera->frustum.left)),
+        glm_clamp(camera->position.y, 0, sceneSize.y - (camera->frustum.top - camera->frustum.bottom)),
+    };
+
+    camera->position = clampedPosition;
+}
+
+void setCameraPositionX(Camera2D *camera, float x)
+{
+    vec2s sceneSize = getGameInstanceActiveScene()->size;
+    float clampedPosition = glm_clamp(x, 0, sceneSize.x - (camera->frustum.right - camera->frustum.left));
+
+    camera->position.x = clampedPosition;
+}
+
+void setCameraPositionY(Camera2D *camera, float y)
+{
+    vec2s sceneSize = getGameInstanceActiveScene()->size;
+    float clampedPosition = glm_clamp(y, 0, sceneSize.y - (camera->frustum.top - camera->frustum.bottom));
+
+    camera->position.y = clampedPosition;
+}
+
 void render(Renderer2D *renderer, Scene *scene)
 {
     Entity **entities = scene->entities;

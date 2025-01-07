@@ -7,6 +7,7 @@
 #include <sprite.h>
 #include <aabb.h>
 #include <types.h>
+#include <stdint.h>
 
 #define CAST_ENTITY(type, value) type *entity = (type *)value
 
@@ -22,6 +23,8 @@ typedef enum
     ENTITY_TYPE_MEGAMAN = BIT(0),
     ENTITY_TYPE_BRICK = BIT(1),
     ENTITY_TYPE_COLLIDER = BIT(2),
+    ENTITY_TYPE_ALLY_SHOOT = BIT(3),
+    ENTITY_TYPE_ENEMY = BIT(4),
 } EntityType;
 
 typedef struct
@@ -33,12 +36,14 @@ typedef struct
 typedef struct Entity
 {
     uint32_t type;
+    size_t index;
     EntityUpdateFn onUpdate;
     EntityCollisionFn onCollision;
     Transform transform;
     bool isMirrored;
     bool isSolid;
     bool isVisible;
+    bool enableCollisions;
     SpriteRenderer *renderer;
     AABB collider;
 } Entity;
@@ -51,5 +56,10 @@ void updateEntity(Entity *entity, float dt);
 void freeEntity(Entity *entity);
 bool isEntityOnScreen(Entity *entity, struct Camera2D *camera);
 void setAnimation(Entity *entity, Animation animation, AnimationPlay play, bool captureFrameTime);
+
+bool isOnRightWall(Entity *entity);
+bool isOnLeftWall(Entity *entity);
+bool isOnFloor(Entity *entity);
+bool isOnCeil(Entity *entity);
 
 #endif
