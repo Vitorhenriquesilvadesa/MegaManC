@@ -83,14 +83,17 @@ Megaman *newMegaman(vec2s position)
     megaman->state = MEGAMAN_STATE_IDLE;
     megaman->speed = (vec2s){0.0f, 0.0f};
     megaman->jumpTriggered = false;
+    megaman->megaBusterTimer = 0.0f;
 
     setAnimation(&megaman->entity, megamanResources.normalAnimations[megaman->state], PLAY_FROM_BEGIN, false);
 
+    Id id = megaman->entity.id;
+
     TriggerAPI *triggers = (TriggerAPI *)getGameInstanceService(SERVICE_TYPE_EVENT);
-    registerTrigger(triggers, onMegamanShootTrigger, onMegamanShoot, megaman);
-    registerTrigger(triggers, onMegamanCeilTrigger, onMegamanCeil, megaman);
-    registerTrigger(triggers, onMegamanLandTrigger, onMegamanLand, megaman);
-    registerTrigger(triggers, onMegamanJumpTrigger, onMegamanJump, megaman);
+    registerTrigger(triggers, id, onMegamanShootTrigger, onMegamanShoot, megaman);
+    registerTrigger(triggers, id, onMegamanCeilTrigger, onMegamanCeil, megaman);
+    registerTrigger(triggers, id, onMegamanLandTrigger, onMegamanLand, megaman);
+    registerTrigger(triggers, id, onMegamanJumpTrigger, onMegamanJump, megaman);
 
     return megaman;
 }
@@ -162,6 +165,11 @@ void onUpdateMegaman(void *self, float dt)
         megaman->speed.y = -megaman->maxFallSpeed;
     }
 
+    if (megaman->megaBusterTimer > 0.0f)
+    {
+        megaman->megaBusterTimer -= dt;
+    }
+
     if (!isKeyPressed(GLFW_KEY_LEFT) && !isKeyPressed(GLFW_KEY_RIGHT))
     {
         megaman->speed.x = 0.0f;
@@ -212,6 +220,23 @@ bool onMegamanLandTrigger(void *self)
 void onMegamanShoot(void *self)
 {
     Megaman *megaman = (Megaman *)self;
+
+    if (megaman->shootExceeded)
+    {
+        if (megaman->megaBusterTimer <= 0.0f)
+        {
+            megaman->shootExceeded = false;
+        }
+        return;
+    }
+
+    if (megaman->megaBusterTimer >= 0.3f)
+    {
+        megaman->shootExceeded = true;
+    }
+
+    megaman->megaBusterTimer += 0.25f;
+
     megaman->shootTime = 0.15f;
     Scene *scene = getGameInstanceActiveScene();
 

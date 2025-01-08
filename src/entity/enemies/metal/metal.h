@@ -26,11 +26,23 @@ typedef struct
     MetalState state;
     float defendTimer;
     float attackTimer;
+    bool shooted;
 } Metal;
 
+typedef struct
+{
+    Enemy enemy;
+    float speed;
+    float angle;
+} MetalShoot;
+
 Metal *newMetal(vec2s position);
+MetalShoot *newMetalShoot(vec2s position, float angle);
 void onUpdateMetal(void *self, float dt);
 void onCollisionMetal(void *self, AABBColisionData data);
+
+void onUpdateMetalShoot(void *self, float dt);
+void onCollisionMetalShoot(void *self, AABBColisionData data);
 
 bool onCollisionWithMegamanTrigger(void *self);
 void onCollisionWithMegaman(void *self);

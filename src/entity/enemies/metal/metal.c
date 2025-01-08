@@ -9,6 +9,7 @@
 #include <trigger.h>
 #include <audio_api.h>
 #include <aabb.h>
+#include <string.h>
 #include <allocator.h>
 
 #define METAL_DEFENT_TIMER_MAX 3.0f
@@ -59,13 +60,55 @@ Metal *newMetal(vec2s position)
     metal->defendTimer = METAL_DEFENT_TIMER_MAX;
 
     metal->enemy = enemy;
+    metal->shooted = false;
     metal->state = METAL_STATE_DEFEND;
 
     TriggerAPI *triggers = (TriggerAPI *)getGameInstanceService(SERVICE_TYPE_EVENT);
-    registerTrigger(triggers, onCollisionWithMegamanTrigger, onCollisionWithMegaman, metal);
-    registerTrigger(triggers, onMetalAttackTrigger, onMetalAttack, metal);
+    Id id = metal->enemy.entity.id;
+
+    registerTrigger(triggers, id, onCollisionWithMegamanTrigger, onCollisionWithMegaman, metal);
+    registerTrigger(triggers, id, onMetalAttackTrigger, onMetalAttack, metal);
 
     return metal;
+}
+
+MetalShoot *newMetalShoot(vec2s position, float angle)
+{
+    static GraphicsAPI *graphics = NULL;
+    static Shader *shader = NULL;
+    static Texture *texture = NULL;
+
+    static bool isAnimationCreated = false;
+
+    if (!isAnimationCreated)
+    {
+        isAnimationCreated = true;
+        graphics = (GraphicsAPI *)getGameInstanceService(SERVICE_TYPE_GRAPHICS);
+        shader = getShader(graphics, SHADER_TYPE_SPRITE);
+        texture = newTextureFromImage("../assets/sprites/enemies/metal/shoot.png");
+    }
+
+    Animation animation = newAnimation(1, 1, texture, false, PLAY_FROM_BEGIN);
+
+    SpriteRenderer *renderer = newSpriteRenderer(shader, animation);
+    Entity entity;
+
+    initEntity(&entity, ENTITY_TYPE_ENEMY, onUpdateMetalShoot, onCollisionMetalShoot, position, (vec2s){8, 8},
+               (vec2s){0.0f, 0.0f}, (vec2s){6.0f, 6.0f}, false, true, renderer);
+
+    MetalShoot *shoot = ALLOCATE(MetalShoot, 1);
+    memset(shoot, 0, sizeof(MetalShoot));
+
+    Enemy enemy;
+    initEnemy(&enemy, entity, ENEMY_TYPE_METAL, 1);
+
+    shoot->enemy = enemy;
+    shoot->angle = angle;
+
+    AudioAPI *audio = (AudioAPI *)getGameInstanceService(SERVICE_TYPE_AUDIO);
+    playAudioWAV(audio, "../assets/audio/sfx/EnemyShoot.wav", AUDIO_ENEMY_SHOOT);
+
+    return shoot;
 }
 
 void onUpdateMetal(void *self, float dt)
@@ -83,17 +126,30 @@ void onUpdateMetal(void *self, float dt)
         metal->defendTimer = METAL_DEFENT_TIMER_MAX;
     }
 
+    if (metal->attackTimer < 0.5f && !metal->shooted && metal->state == METAL_STATE_ATTACK)
+    {
+        metal->shooted = true;
+        Scene *scene = getGameInstanceActiveScene();
+        float angle = metal->enemy.entity.isMirrored ? 0 : 180;
+        vec2s position = (vec2s){metal->enemy.entity.transform.position.x, metal->enemy.entity.transform.position.y + 3.0f};
+        addObjectToScene(scene, AS_ENTITY_PTR(newMetalShoot(position, angle)));
+    }
+
     if (metal->attackTimer > 0.0f)
     {
         metal->attackTimer -= dt;
     }
     else
     {
+        metal->shooted = false;
         setAnimation(AS_ENTITY_PTR(metal), metalResources.animations[METAL_STATE_DEFEND], PLAY_FROM_BEGIN, false);
         metal->state = METAL_STATE_DEFEND;
     }
 
-    metal->enemy.entity.isMirrored = metal->enemy.entity.transform.position.x < megaman->entity.transform.position.x;
+    if (metal->state == METAL_STATE_DEFEND)
+    {
+        metal->enemy.entity.isMirrored = metal->enemy.entity.transform.position.x < megaman->entity.transform.position.x;
+    }
 }
 
 void onCollisionMetal(void *self, AABBColisionData data)
@@ -116,7 +172,7 @@ void onCollisionMetal(void *self, AABBColisionData data)
                 playAudioWAV(audio, "../assets/audio/sfx/Dink.wav", AUDIO_DINK);
                 shoot->weapon.entity.enableCollisions = false;
 
-                metal->defendTimer = METAL_DEFENT_TIMER_MAX;
+                metal->defendTimer = METAL_DEFENT_TIMER_MAX / 3.0f;
 
                 if (shoot->weapon.entity.transform.position.x < metal->enemy.entity.transform.position.x)
                 {
@@ -133,12 +189,13 @@ void onCollisionMetal(void *self, AABBColisionData data)
             {
                 metal->enemy.life -= weapon->damage;
                 shoot->weapon.entity.enableCollisions = false;
-                destroyEntity(getGameInstanceActiveScene(), shoot->weapon.entity.index);
+                Scene *scene = getGameInstanceActiveScene();
+                vec2s position = metal->enemy.entity.transform.position;
+
+                destroyEntity(scene, shoot->weapon.entity.index);
 
                 if (metal->enemy.life == 0)
                 {
-                    Scene *scene = getGameInstanceActiveScene();
-                    vec2s position = metal->enemy.entity.transform.position;
                     destroyEntity(scene, metal->enemy.entity.index);
                     addObjectToScene(scene, AS_ENTITY_PTR(newSmallExplosion(position)));
                 }
@@ -147,6 +204,23 @@ void onCollisionMetal(void *self, AABBColisionData data)
             }
         }
     }
+}
+
+void onUpdateMetalShoot(void *self, float dt)
+{
+    MetalShoot *shoot = (MetalShoot *)self;
+
+    float angleRadians = glm_rad(shoot->angle);
+
+    float dx = cos(angleRadians) * 120.0f * dt;
+    float dy = sin(angleRadians) * 120.0f * dt;
+
+    shoot->enemy.entity.transform.position.x += dx;
+    shoot->enemy.entity.transform.position.y += dy;
+}
+
+void onCollisionMetalShoot(void *self, AABBColisionData data)
+{
 }
 
 bool onCollisionWithMegamanTrigger(void *self)
@@ -165,7 +239,7 @@ void onCollisionWithMegaman(void *self)
 bool onMetalAttackTrigger(void *self)
 {
     Metal *metal = (Metal *)self;
-    metal->state = METAL_STATE_ATTACK;
+
     return metal->defendTimer <= 0.0f;
 }
 
@@ -173,5 +247,6 @@ void onMetalAttack(void *self)
 {
     Metal *metal = (Metal *)self;
     metal->attackTimer = 1.0f;
+    metal->state = METAL_STATE_ATTACK;
     setAnimation(AS_ENTITY_PTR(metal), metalResources.animations[METAL_STATE_ATTACK], PLAY_FROM_BEGIN, false);
 }

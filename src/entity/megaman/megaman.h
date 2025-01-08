@@ -27,6 +27,8 @@ typedef struct
     float maxFallSpeed;
     float jumpStrength;
     float shootTime;
+    float megaBusterTimer;
+    bool shootExceeded;
     bool isJumping;
     bool isFalling;
     bool isMoving;

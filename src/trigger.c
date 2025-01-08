@@ -1,6 +1,7 @@
 #include <trigger.h>
 #include <allocator.h>
 #include <stdio.h>
+#include <entity.h>
 
 TriggerAPI *newTriggerAPI()
 {
@@ -45,11 +46,28 @@ void shutdownTriggerAPI(void *self)
 {
 }
 
-void registerTrigger(TriggerAPI *api, TriggerCondition condition, TriggerCallback action, void *context)
+void deleteTriggerById(TriggerAPI *api, Id id)
+{
+    for (size_t i = 0; i < api->triggerCount; i++)
+    {
+        Trigger *trigger = api->triggers[i];
+
+        if (trigger->id == id)
+        {
+            FREE(trigger);
+            api->triggers[i] = api->triggers[api->triggerCount - 1];
+            api->triggerCount--;
+            continue;
+        }
+    }
+}
+
+void registerTrigger(TriggerAPI *api, Id id, TriggerCondition condition, TriggerCallback action, void *context)
 {
     Trigger *trigger = ALLOCATE(Trigger, 1);
     trigger->condition = condition;
     trigger->action = action;
+    trigger->id = id;
     trigger->context = context;
     trigger->status = TRIGGER_STATUS_WAITING;
 

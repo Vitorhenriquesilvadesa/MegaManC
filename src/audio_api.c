@@ -58,6 +58,7 @@ void updateAudioAPI(void *self, float dt)
     CAST_API(AudioAPI, self);
 
     Node *current = api->audios->head;
+    size_t index = 0;
     while (current)
     {
         Audio *audio = (Audio *)current->data;
@@ -68,9 +69,10 @@ void updateAudioAPI(void *self, float dt)
         if (state != AL_PLAYING && !audio->isLoop)
         {
             alDeleteSources(1, &audio->source);
-            removeUsingPredicate(api->audios, isAudioPlaying);
+            removeFromList(api->audios, index);
         }
 
+        index++;
         current = current->next;
     }
 }

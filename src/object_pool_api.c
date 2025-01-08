@@ -1,6 +1,7 @@
 #include <object_pool_api.h>
 #include <allocator.h>
 #include <graphics_api.h>
+#include <enemies/spawner.h>
 #include <vfx/vfx.h>
 #include <game.h>
 
@@ -41,6 +42,11 @@ void updateScene(Scene *scene, float dt)
     Entity **entities = scene->entities;
     GraphicsAPI *graphics = (GraphicsAPI *)getGameInstanceService(SERVICE_TYPE_GRAPHICS);
     Camera2D *camera = graphics->renderer->camera;
+
+    for (uint32_t i = 0; i < scene->spawnerCount; i++)
+    {
+        updateSpawner(scene->spawners[i]);
+    }
 
     for (uint32_t i = 0; i < scene->entityCount; i++)
     {
@@ -106,6 +112,7 @@ void destroyEntity(Scene *scene, int index)
     Entity *entity = scene->entities[index];
     scene->entities[index] = scene->entities[scene->entityCount - 1];
     scene->entities[index]->index = index;
+    entity->isEnabled = false;
 
     freeEntity(entity);
     scene->entityCount--;

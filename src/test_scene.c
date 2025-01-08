@@ -5,6 +5,7 @@
 #include <game.h>
 #include <graphics_api.h>
 #include <audio_api.h>
+#include <enemies/spawner.h>
 #include <allocator.h>
 
 Scene *getTestScene()
@@ -19,8 +20,8 @@ Scene *getTestScene()
 
     generateColliders(scene, &mask, tilemap->width, tilemap->height);
     addObjectToScene(scene, AS_ENTITY_PTR(megaman));
-    addObjectToScene(scene, AS_ENTITY_PTR(newMetal((vec2s){16.0f, 7.0f})));
-    addObjectToScene(scene, AS_ENTITY_PTR(newMetal((vec2s){-32.0f, 55.0f})));
+    addSpawnerToScene(scene, newEnemySpawner((SpawnFn)newMetal, (vec2s){16.0f, 7.0f}, (vec2s){14.0f, 15.0f}));
+    addSpawnerToScene(scene, newEnemySpawner((SpawnFn)newMetal, (vec2s){-32.0f, 55.0f}, (vec2s){14.0f, 15.0f}));
 
     AudioAPI *audio = (AudioAPI *)getGameInstanceService(SERVICE_TYPE_AUDIO);
     playAudioOGG(audio, "../assets/audio/music/001.ogg", AUDIO_NITRO_MAN);

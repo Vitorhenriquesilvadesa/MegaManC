@@ -15,6 +15,7 @@
 
 typedef struct Camera2D Camera2D;
 
+typedef unsigned long Id;
 typedef void (*EntityUpdateFn)(void *self, float dt);
 typedef void (*EntityCollisionFn)(void *self, AABBColisionData data);
 
@@ -36,6 +37,7 @@ typedef struct
 
 typedef struct Entity
 {
+    Id id;
     uint32_t type;
     size_t index;
     EntityUpdateFn onUpdate;
@@ -45,6 +47,7 @@ typedef struct Entity
     bool isSolid;
     bool isVisible;
     bool enableCollisions;
+    bool isEnabled;
     SpriteRenderer *renderer;
     AABB collider;
 } Entity;

@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "NitroMan.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -12,12 +12,12 @@
             "scale": 1.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 227.66666666666663,
-                "y": 114.99999999999999
+                "x": 257.66666666666663,
+                "y": 93.66666666666663
             }
         },
         "NitroMan.tsj": {
-            "scaleInDock": 4,
+            "scaleInDock": 3,
             "scaleInEditor": 1
         },
         "Tilemap001.tsj": {
@@ -41,14 +41,13 @@
     "map.tileWidth": 16,
     "map.width": 32,
     "openFiles": [
-        "NitroMan.tmj",
         "NitroMan.tsj",
-        "NitroMan.tsj"
+        "NitroMan.tmj"
     ],
     "project": "MegaMan.tiled-project",
     "recentFiles": [
-        "NitroMan.tmj",
         "NitroMan.tsj",
+        "NitroMan.tmj",
         "scene001.tmj",
         "Tilemap001.tsj"
     ],

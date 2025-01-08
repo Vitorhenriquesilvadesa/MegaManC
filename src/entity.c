@@ -1,5 +1,7 @@
 #include <entity.h>
 #include <allocator.h>
+#include <game.h>
+#include <trigger.h>
 #include <renderer.h>
 
 Entity *newEntity(uint32_t type, EntityUpdateFn onUpdate, EntityCollisionFn onCollision, vec2s position, vec2s scale, vec2s aabbMin, vec2s aabbMax, bool isSolid, bool isVisible, SpriteRenderer *renderer)
@@ -30,6 +32,11 @@ void initEntity(Entity *entity, uint32_t type, EntityUpdateFn onUpdate, EntityCo
     entity->isSolid = isSolid;
     entity->isVisible = isVisible;
     entity->enableCollisions = true;
+    entity->isEnabled = true;
+
+    static Id currentId = 0;
+
+    entity->id = currentId++;
 
     entity->collider = collider;
 }
@@ -62,7 +69,9 @@ void updateEntity(Entity *entity, float dt)
 
 void freeEntity(Entity *entity)
 {
-    freeSpriteRenderer(entity->renderer);
+    // freeSpriteRenderer(entity->renderer);
+    TriggerAPI *triggers = (TriggerAPI *)getGameInstanceService(SERVICE_TYPE_EVENT);
+    deleteTriggerById(triggers, entity->id);
     FREE(entity);
 }
 

@@ -13,5 +13,5 @@ SpriteRenderer *newSpriteRenderer(Shader *shader, Animation animation)
 
 void freeSpriteRenderer(SpriteRenderer *renderer)
 {
-    // FREE(renderer);
+    FREE(renderer);
 }

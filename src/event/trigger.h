@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <service.h>
+#include <entity.h>
 
 typedef enum
 {
@@ -19,6 +20,7 @@ typedef struct
     TriggerCondition condition;
     TriggerCallback action;
     TriggerStatus status;
+    Id id;
     void *context;
 } Trigger;
 
@@ -36,6 +38,7 @@ void initTriggerAPI(void *self);
 void updateTriggerAPI(void *self, float dt);
 void shutdownTriggerAPI(void *self);
 
-void registerTrigger(TriggerAPI *api, TriggerCondition condition, TriggerCallback action, void *context);
+void deleteTriggerById(TriggerAPI *api, Id id);
+void registerTrigger(TriggerAPI *api, Id id, TriggerCondition condition, TriggerCallback action, void *context);
 
 #endif
