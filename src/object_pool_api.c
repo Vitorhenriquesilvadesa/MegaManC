@@ -105,6 +105,11 @@ void updateScene(Scene *scene, float dt)
             }
         }
     }
+
+    for (uint32_t i = 0; i < scene->hudCount; i++)
+    {
+        scene->hudElements[i]->onUpdate(scene->hudElements[i], dt);
+    }
 }
 
 void destroyEntity(Scene *scene, int index)

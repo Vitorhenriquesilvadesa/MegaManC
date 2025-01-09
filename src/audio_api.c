@@ -233,7 +233,7 @@ DWORD WINAPI playAudioOGGAsync(LPVOID param)
 
 void playAudioOGGAsyncWrapper(AudioAPI *api, const char *filepath, AudioName music)
 {
-    AudioPlayTask *task = malloc(sizeof(AudioPlayTask));
+    AudioPlayTask *task = ALLOCATE(AudioPlayTask, 1);
     task->audio = api;
     task->filepath = filepath;
     task->format = AUDIO_FORMAT_OGG;

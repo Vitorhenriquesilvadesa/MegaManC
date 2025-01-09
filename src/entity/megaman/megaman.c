@@ -117,7 +117,7 @@ void onUpdateMegaman(void *self, float dt)
 
     if (megaman->shootTime <= 0.0f)
     {
-        setAnimation(&megaman->entity, megamanResources.normalAnimations[megaman->state], PLAY_FROM_BEGIN, false);
+        setAnimation(&megaman->entity, megamanResources.normalAnimations[megaman->state], PLAY_FROM_BEGIN, true);
     }
     else
     {
@@ -266,6 +266,7 @@ void onMegamanLand(void *self)
     megaman->speed.y = 0.0f;
     megaman->isOnFloor = true;
     AudioAPI *audio = (AudioAPI *)getGameInstanceService(SERVICE_TYPE_AUDIO);
+    playAudioWAV(audio, "../assets/audio/sfx/MegamanLand.wav", AUDIO_MEGAMAN_LAND);
 }
 
 bool onMegamanCeilTrigger(void *self)

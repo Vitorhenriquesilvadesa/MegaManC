@@ -111,6 +111,12 @@ void shaderSetInt(Shader *shader, const char *name, int value)
     glUniform1i(location, value);
 }
 
+void shaderSetVec2(Shader *shader, const char *name, vec2s value)
+{
+    GLuint location = glGetUniformLocation(shader->id, name);
+    glUniform2fv(location, 1, (const GLfloat *)value.raw);
+}
+
 void shaderSetMat4(Shader *shader, const char *name, mat4s value)
 {
     GLuint location = glGetUniformLocation(shader->id, name);

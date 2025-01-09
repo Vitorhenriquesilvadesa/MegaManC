@@ -27,6 +27,7 @@ file(GLOB SOURCE_FILES
     "${SOURCE_DIR}/*.c" 
     "${SOURCE_DIR}/*.h"
     "${SOURCE_DIR}/entity/megaman/*.c" 
+    "${SOURCE_DIR}/entity/hud/*.c" 
     "${SOURCE_DIR}/entity/vfx/*.c" 
     "${SOURCE_DIR}/entity/enemies/*.c" 
 )
@@ -48,6 +49,7 @@ include_directories(
     src/entity/megaman
     src/entity/enemies
     src/entity/vfx
+    src/entity/hud
     src/memory 
     src/game 
     src/util

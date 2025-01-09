@@ -4,7 +4,7 @@ int main(void)
 {
     Game game;
     setGameInstance(&game);
-    initGame(&game, 144.0f, 1.0f / 60.0f, true);
+    initGame(&game, 240.0f, 1.0f / 60.0f, true);
     gameLoop(&game);
     freeGame(&game);
 

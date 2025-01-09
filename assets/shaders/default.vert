@@ -11,6 +11,8 @@ uniform mat4 model;
 uniform mat4 view;
 uniform int frameCount;
 uniform int currentFrame;
+uniform int isTiled;
+uniform vec2 scale;
 
 void main(void) {
     vec4 worldPosition = projection * view * model * vec4(aPos.xy, 0.0, 1.0);
@@ -19,7 +21,11 @@ void main(void) {
     float frameWidth = 1.0 / float(frameCount);
     float offset = frameWidth * float(currentFrame);
 
-    TexCoord = vec2(aTexCoord.x * frameWidth + offset, aTexCoord.y);
+    if(isTiled == 0) {
+        TexCoord = vec2(aTexCoord.x * frameWidth + offset, aTexCoord.y);
+    } else {
+        TexCoord = aTexCoord * scale;
+    }
 
     gl_Position = worldPosition;
 }

@@ -27,6 +27,8 @@ typedef enum
     ENTITY_TYPE_ALLY_SHOOT = BIT(3),
     ENTITY_TYPE_ENEMY = BIT(4),
     ENTITY_TYPE_VFX = BIT(5),
+    ENTITY_TYPE_HUD_ELEMENT = BIT(6),
+    ENTITY_TYPE_STATIC = BIT(7),
 } EntityType;
 
 typedef struct
@@ -48,11 +50,13 @@ typedef struct Entity
     bool isVisible;
     bool enableCollisions;
     bool isEnabled;
+    bool isTiled;
     SpriteRenderer *renderer;
     AABB collider;
 } Entity;
 
 Entity *newEntity(uint32_t type, EntityUpdateFn onUpdate, EntityCollisionFn onCollision, vec2s position, vec2s scale, vec2s aabbMin, vec2s aabbMax, bool isSolid, bool isVisible, SpriteRenderer *renderer);
+Entity *newStaticEntity(vec2s position, vec2s size, const char *texturePath);
 void initEntity(Entity *entity, uint32_t type, EntityUpdateFn onUpdate, EntityCollisionFn onCollision, vec2s position, vec2s scale, vec2s aabbMin, vec2s aabbMax, bool isSolid, bool isVisible, SpriteRenderer *renderer);
 mat4s entityGetTransformationMatrix(Entity *entity);
 

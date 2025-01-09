@@ -3,12 +3,27 @@
 #include <game.h>
 #include <trigger.h>
 #include <renderer.h>
+#include <graphics_api.h>
 
 Entity *newEntity(uint32_t type, EntityUpdateFn onUpdate, EntityCollisionFn onCollision, vec2s position, vec2s scale, vec2s aabbMin, vec2s aabbMax, bool isSolid, bool isVisible, SpriteRenderer *renderer)
 {
     Entity *entity = ALLOCATE(Entity, 1);
 
     initEntity(entity, type, onUpdate, onCollision, position, scale, aabbMin, aabbMax, isSolid, isVisible, renderer);
+
+    return entity;
+}
+
+Entity *newStaticEntity(vec2s position, vec2s size, const char *texturePath)
+{
+    GraphicsAPI *graphics = (GraphicsAPI *)getGameInstanceService(SERVICE_TYPE_GRAPHICS);
+    Shader *shader = getShader(graphics, SHADER_TYPE_SPRITE);
+    Texture *texture = newTextureFromImage(texturePath);
+    SpriteRenderer *renderer = newSpriteRenderer(shader, newAnimation(1, 1, texture, false, PLAY_FROM_BEGIN));
+
+    Entity *entity = newEntity(ENTITY_TYPE_STATIC, onUpdateNull, onCollisionNull, position, size, (vec2s){0.0f, 0.0f}, (vec2s){1.0f, 1.0f}, false, true, renderer);
+    entity->isTiled = true;
+    entity->enableCollisions = false;
 
     return entity;
 }
@@ -33,6 +48,7 @@ void initEntity(Entity *entity, uint32_t type, EntityUpdateFn onUpdate, EntityCo
     entity->isVisible = isVisible;
     entity->enableCollisions = true;
     entity->isEnabled = true;
+    entity->isTiled = false;
 
     static Id currentId = 0;
 

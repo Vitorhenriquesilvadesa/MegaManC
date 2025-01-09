@@ -112,10 +112,30 @@ void setCameraPositionY(Camera2D *camera, float y)
 void render(Renderer2D *renderer, Scene *scene)
 {
     Entity **entities = scene->entities;
+    Entity **background = scene->backgroundElements;
     TilemapData *tilemap = scene->tilemap;
+
+    bindMesh(quad);
+    for (uint32_t i = 0; i < scene->backgroundCount; i++)
+    {
+        // renderCollider(entities[i], renderer->camera);
+
+        if (!background[i]->isVisible)
+        {
+            continue;
+        }
+
+        if (isEntityOnScreen(background[i], renderer->camera))
+        {
+            renderEntity(background[i], renderer->camera);
+        }
+
+        // renderWireframe(entities[i], renderer->camera);
+    }
 
     renderTilemap(tilemap, renderer->camera);
 
+    bindMesh(quad);
     for (uint32_t i = 0; i < scene->entityCount; i++)
     {
         // renderCollider(entities[i], renderer->camera);
@@ -133,6 +153,10 @@ void render(Renderer2D *renderer, Scene *scene)
         // renderWireframe(entities[i], renderer->camera);
     }
 
+    unbindTextures();
+    unbindMeshes();
+    unbindShaders();
+
     for (size_t i = 0; i < renderer->lineCount; i++)
     {
         Line line = renderer->lines[i];
@@ -140,6 +164,8 @@ void render(Renderer2D *renderer, Scene *scene)
     }
 
     renderer->lineCount = 0;
+
+    renderHudElements(scene->hudElements, scene->hudCount, renderer->camera);
 }
 
 void renderEntity(Entity *entity, Camera2D *camera)
@@ -155,14 +181,11 @@ void renderEntity(Entity *entity, Camera2D *camera)
     shaderSetMat4(shader, "projection", cameraGetProjectionMatrix(camera));
     shaderSetMat4(shader, "view", cameraGetViewMatrix(camera));
     shaderSetMat4(shader, "model", entityGetTransformationMatrix(entity));
+    shaderSetInt(shader, "isTiled", 0);
+    shaderSetVec2(shader, "scale", (vec2s){1.0f, 1.0f});
     shaderSetInt(shader, "albedo", 0);
 
-    bindMesh(quad);
     drawMesh(quad);
-
-    unbindTextures();
-    unbindMeshes();
-    unbindShaders();
 }
 
 void renderWireframe(Entity *entity, Camera2D *camera)
@@ -292,6 +315,40 @@ void renderTilemap(TilemapData *tilemap, Camera2D *camera)
 
         // renderWireframe(entities[i], renderer->camera);
         // renderCollider(entities[i], renderer->camera);
+    }
+
+    unbindTextures();
+    unbindMeshes();
+    unbindShaders();
+}
+
+void renderHudElements(Entity **entities, uint32_t count, Camera2D *camera)
+{
+    static Shader *shader = NULL;
+    if (!shader)
+    {
+        shader = getShader(((GraphicsAPI *)getGameInstanceService(SERVICE_TYPE_GRAPHICS)), SHADER_TYPE_SPRITE);
+    }
+
+    bindShader(shader);
+    bindMesh(quad);
+
+    shaderSetMat4(shader, "projection", cameraGetProjectionMatrix(camera));
+    shaderSetMat4(shader, "view", (mat4s)GLMS_MAT4_IDENTITY_INIT);
+
+    for (uint32_t i = 0; i < count; i++)
+    {
+        Entity *entity = entities[i];
+        glActiveTexture(GL_TEXTURE0);
+        bindTexture(entity->renderer->currentAnimation.texture);
+        shaderSetInt(shader, "frameCount", entity->renderer->currentAnimation.frameCount);
+        shaderSetInt(shader, "currentFrame", entity->renderer->currentAnimation.currentFrame);
+        shaderSetMat4(shader, "model", entityGetTransformationMatrix(entity));
+        shaderSetInt(shader, "albedo", 0);
+        shaderSetInt(shader, "isTiled", entities[i]->isTiled);
+        shaderSetVec2(shader, "scale", (vec2s){entities[i]->transform.scale.x / entity->renderer->currentAnimation.texture->width, entities[i]->transform.scale.y / entity->renderer->currentAnimation.texture->height});
+
+        drawMesh(quad);
     }
 
     unbindTextures();

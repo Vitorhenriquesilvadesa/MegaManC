@@ -31,5 +31,5 @@ void onWindowResize(GLFWwindow *window, int width, int height)
 
 void onWindowFocus(GLFWwindow *window, int focused)
 {
-    setGameEnableUpdates(focused);
+    // setGameEnableUpdates(focused);
 }

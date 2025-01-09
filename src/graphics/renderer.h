@@ -2,8 +2,6 @@
 #define RENDERER_H
 
 #include <glad/glad.h>
-#define CGLM_USE_STRUCT
-#include <cglm/struct.h>
 
 #include <shader.h>
 #include <mesh.h>
@@ -11,6 +9,9 @@
 #include <entity.h>
 #include <scene.h>
 #include <ray_cast.h>
+
+#define CGLM_USE_STRUCT
+#include <cglm/struct.h>
 
 typedef struct
 {
@@ -58,6 +59,7 @@ void renderCollider(Entity *entity, Camera2D *camera);
 void renderLine(Renderer2D *renderer, Line line);
 void renderTile(Tile tile, Camera2D *camera);
 void renderTilemap(TilemapData *tilemap, Camera2D *camera);
+void renderHudElements(Entity **entities, uint32_t count, Camera2D *camera);
 
 void drawLine(Renderer2D *renderer, Ray ray, float distance);
 

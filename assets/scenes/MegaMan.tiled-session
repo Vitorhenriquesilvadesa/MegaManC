@@ -3,16 +3,20 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "NitroMan.tmj",
+    "activeFile": "",
     "expandedProjectPaths": [
         "."
     ],
     "fileStates": {
+        "C:/Users/vitor/Downloads/NitroManBG.tsj": {
+            "scaleInDock": 3,
+            "scaleInEditor": 1
+        },
         "NitroMan.tmj": {
             "scale": 1.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 257.66666666666663,
+                "x": 190,
                 "y": 93.66666666666663
             }
         },
@@ -28,24 +32,24 @@
             "scale": 2,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 177.75,
+                "x": 127,
                 "y": 174.75
             }
         }
     },
-    "last.imagePath": "C:/Github/CDev/MegaMan/assets/tilemap",
+    "last.imagePath": "C:/Users/vitor/Downloads",
     "map.fixedSize": true,
     "map.height": 14,
     "map.lastUsedFormat": "json",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
-    "map.width": 32,
+    "map.width": 16,
     "openFiles": [
-        "NitroMan.tsj",
-        "NitroMan.tmj"
+        "C:/Users/vitor/Downloads/NitroManBG.tsj"
     ],
     "project": "MegaMan.tiled-project",
     "recentFiles": [
+        "C:/Users/vitor/Downloads/NitroManBG.tsj",
         "NitroMan.tsj",
         "NitroMan.tmj",
         "scene001.tmj",

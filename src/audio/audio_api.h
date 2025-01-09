@@ -6,7 +6,7 @@
 #include <AL/alc.h>
 #include <list.h>
 
-typedef struct __attribute__((packed))
+typedef struct
 {
     unsigned RiffChunk;
     unsigned ChunkSize;
@@ -31,6 +31,7 @@ typedef enum
     AUDIO_SMALL_EXPLOSION,
     AUDIO_ENEMY_SHOOT,
     AUDIO_MEGA_BUSTER,
+    AUDIO_MEGAMAN_LAND,
     AUDIO_NAME_MAX,
 } AudioName;
 

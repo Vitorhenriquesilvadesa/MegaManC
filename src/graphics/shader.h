@@ -26,6 +26,7 @@ void compileShader(GLuint shaderID);
 void linkProgram(Shader *shader, GLuint vertexShader, GLuint fragmentShader);
 
 void shaderSetInt(Shader *shader, const char *name, int value);
+void shaderSetVec2(Shader *shader, const char *name, vec2s value);
 void shaderSetMat4(Shader *shader, const char *name, mat4s value);
 
 void bindShader(Shader *shader);
